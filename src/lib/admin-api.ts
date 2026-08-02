@@ -275,10 +275,14 @@ export async function setGlobalPortfolioRequirement(params: {
     min_deposit_total: Math.max(params.minDepositTotal, 0),
     currency: params.currency ?? "USD",
   };
-  const { error } = await supabase.from("platform_settings").upsert({
-    key: "withdrawal_portfolio_requirement",
-    value,
-  });
+  const { error } = await supabase.from("platform_settings").upsert(
+    {
+      key: "withdrawal_portfolio_requirement",
+      value,
+      updated_at: new Date().toISOString(),
+    },
+    { onConflict: "key" }
+  );
   if (error) throw new Error(rpcErrorMessage(error, "Could not save portfolio requirement."));
   return {
     enabled: value.enabled,

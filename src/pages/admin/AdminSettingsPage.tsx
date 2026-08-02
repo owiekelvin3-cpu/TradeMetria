@@ -34,7 +34,10 @@ export default function AdminSettingsPage() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
-    const { error: err } = await supabase.from("platform_settings").upsert({ key, value });
+    const { error: err } = await supabase.from("platform_settings").upsert(
+      { key, value, updated_at: new Date().toISOString() },
+      { onConflict: "key" }
+    );
     if (err) setError(err.message);
     else {
       setSettings((prev) => ({ ...prev, [key]: value }));
