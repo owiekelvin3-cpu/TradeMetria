@@ -1,6 +1,7 @@
 import { supabase } from "@/lib/supabase";
 import type { Profile, TransactionStatus, UserFee, UserFeeStatus } from "@/types/database";
 import type { GlobalPortfolioRequirementSettings, PortfolioRequirementStatus } from "@/lib/portfolio-requirement";
+import { computePortfolioStatus, fetchGlobalPortfolioRequirementSettings } from "@/lib/portfolio-requirement";
 
 export interface AdminUserAuthInfo {
   created_at: string | null;
@@ -269,17 +270,20 @@ export async function setGlobalPortfolioRequirement(params: {
   minDepositTotal: number;
   currency?: string;
 }): Promise<GlobalPortfolioRequirementSettings> {
-  const { data, error } = await supabase.rpc("admin_set_withdrawal_portfolio_requirement", {
-    p_enabled: params.enabled,
-    p_min_deposit_total: params.minDepositTotal,
-    p_currency: params.currency ?? "USD",
+  const value = {
+    enabled: params.enabled,
+    min_deposit_total: Math.max(params.minDepositTotal, 0),
+    currency: params.currency ?? "USD",
+  };
+  const { error } = await supabase.from("platform_settings").upsert({
+    key: "withdrawal_portfolio_requirement",
+    value,
   });
   if (error) throw new Error(rpcErrorMessage(error, "Could not save portfolio requirement."));
-  const row = (data ?? {}) as Record<string, unknown>;
   return {
-    enabled: Boolean(row.enabled),
-    min_deposit_total: Number(row.min_deposit_total ?? 0),
-    currency: String(row.currency ?? "USD"),
+    enabled: value.enabled,
+    min_deposit_total: value.min_deposit_total,
+    currency: value.currency,
   };
 }
 
@@ -289,22 +293,41 @@ export async function setUserPortfolioRequirement(params: {
   waived?: boolean;
   clearOverride?: boolean;
 }): Promise<PortfolioRequirementStatus> {
-  const { data, error } = await supabase.rpc("admin_set_user_portfolio_requirement", {
-    p_user_id: params.userId,
-    p_override: params.override ?? null,
-    p_waived: params.waived ?? null,
-    p_clear_override: params.clearOverride ?? false,
-  });
+  const updates: Partial<Pick<Profile, "portfolio_requirement_override" | "portfolio_requirement_waived">> = {};
+
+  if (params.clearOverride) {
+    updates.portfolio_requirement_override = null;
+  } else if (params.override != null) {
+    updates.portfolio_requirement_override = params.override;
+  }
+
+  if (params.waived != null) {
+    updates.portfolio_requirement_waived = params.waived;
+  }
+
+  const { error } = await supabase.from("profiles").update(updates).eq("id", params.userId);
   if (error) throw new Error(rpcErrorMessage(error, "Could not update user portfolio requirement."));
-  const row = (data ?? {}) as Record<string, unknown>;
-  return {
-    enabled: Boolean(row.enabled),
-    waived: Boolean(row.waived),
-    source: (row.source as PortfolioRequirementStatus["source"]) ?? "none",
-    requirement: Number(row.requirement ?? 0),
-    deposit_total: Number(row.deposit_total ?? 0),
-    remaining: Number(row.remaining ?? 0),
-    currency: String(row.currency ?? "USD"),
-    can_withdraw: Boolean(row.can_withdraw),
-  };
+
+  const [global, depositsRes, profileRes] = await Promise.all([
+    fetchGlobalPortfolioRequirementSettings(),
+    supabase.from("deposits").select("amount, status").eq("user_id", params.userId),
+    supabase
+      .from("profiles")
+      .select("portfolio_requirement_override, portfolio_requirement_waived")
+      .eq("id", params.userId)
+      .single(),
+  ]);
+  if (depositsRes.error) throw new Error(depositsRes.error.message);
+  if (profileRes.error) throw new Error(profileRes.error.message);
+
+  const depositTotal = (depositsRes.data ?? [])
+    .filter((d) => d.status === "completed" || d.status === "approved")
+    .reduce((sum, d) => sum + Number(d.amount), 0);
+
+  return computePortfolioStatus({
+    global,
+    override: profileRes.data?.portfolio_requirement_override ?? null,
+    waived: Boolean(profileRes.data?.portfolio_requirement_waived),
+    depositTotal,
+  });
 }
