@@ -35,6 +35,7 @@ const AuthPage = lazy(() => import("@/pages/auth/AuthPage"));
 const AdminAuthPage = lazy(() => import("@/pages/auth/AdminAuthPage"));
 
 const DashboardPage = lazy(() => import("@/pages/dashboard/DashboardPage"));
+const PortfolioPage = lazy(() => import("@/pages/dashboard/PortfolioPage"));
 const DepositsPage = lazy(() => import("@/pages/dashboard/DepositsPage"));
 const CryptoDepositPage = lazy(() => import("@/pages/dashboard/CryptoDepositPage"));
 const GiftCardDepositPage = lazy(() => import("@/pages/dashboard/GiftCardDepositPage"));
@@ -123,6 +124,7 @@ function App() {
 
               <Route element={<ProtectedRoute><DashboardLayout /></ProtectedRoute>}>
                 <Route path="dashboard" element={<DashboardPage />} />
+                <Route path="dashboard/portfolio" element={<PortfolioPage />} />
                 <Route path="dashboard/deposits" element={<DepositsPage />} />
                 <Route path="dashboard/deposits/crypto" element={<CryptoDepositPage />} />
                 <Route path="dashboard/deposits/gift-card/:brandId" element={<GiftCardBrandDepositPage />} />

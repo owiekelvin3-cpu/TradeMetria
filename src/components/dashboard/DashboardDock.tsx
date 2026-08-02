@@ -9,7 +9,7 @@ import {
 import { cn } from "@/lib/utils";
 
 const TABS = [
-  { id: "home", href: "/dashboard", labelKey: "dashboard.dock.home", icon: LayoutDashboard, match: (p: string) => p === "/dashboard" },
+  { id: "home", href: "/dashboard", labelKey: "dashboard.dock.home", icon: LayoutDashboard, match: (p: string) => p === "/dashboard" || p === "/dashboard/portfolio" },
   {
     id: "trade",
     href: "/dashboard/trading-room",

@@ -4,7 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { Logo } from "@/components/brand/Logo";
 import { cn } from "@/lib/utils";
 import {
-  LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, TrendingUp, History,
+  LayoutDashboard, ArrowDownToLine, ArrowUpFromLine, TrendingUp, History, LineChart,
   Copy, Pickaxe, Radio, FileCheck, LogOut, Menu, Shield, Search, CandlestickChart, Bot, Settings, MessageCircle, Bell, X,
 } from "@/lib/icons";
 import { UserAvatar } from "@/components/settings/UserAvatar";
@@ -30,6 +30,7 @@ const navGroups: { labelKey: string; links: NavLink[] }[] = [
     labelKey: "dashboard.navGroupTrade",
     links: [
       { href: "/dashboard", labelKey: "dashboard.overview", icon: LayoutDashboard },
+      { href: "/dashboard/portfolio", labelKey: "dashboard.portfolio", icon: LineChart },
       { href: "/dashboard/trading-room", labelKey: "dashboard.tradingRoom", icon: CandlestickChart },
       { href: "/dashboard/ai-trading", labelKey: "dashboard.aiTrading", icon: Bot },
     ],
@@ -63,6 +64,7 @@ const navGroups: { labelKey: string; links: NavLink[] }[] = [
 
 function isLinkActive(pathname: string, href: string) {
   if (href === "/dashboard") return pathname === "/dashboard";
+  if (href === "/dashboard/portfolio") return pathname === "/dashboard/portfolio";
   if (href === "/dashboard/trading-room") {
     return pathname.startsWith("/dashboard/trading");
   }
@@ -84,7 +86,8 @@ export function DashboardLayout() {
     e.preventDefault();
     const q = searchQuery.trim().toLowerCase();
     if (!q) return;
-    if (q.includes("transaction") || q.includes("history")) navigate("/dashboard/transactions");
+    if (q.includes("portfolio") || q.includes("balance")) navigate("/dashboard/portfolio");
+    else if (q.includes("transaction") || q.includes("history")) navigate("/dashboard/transactions");
     else if (q.includes("deposit") || q.includes("fund")) navigate("/dashboard/deposits");
     else if (q.includes("withdraw") || q.includes("cash out")) navigate("/dashboard/withdrawals");
     else if (q.includes("ai") || q.includes("bot")) navigate("/dashboard/ai-trading");
