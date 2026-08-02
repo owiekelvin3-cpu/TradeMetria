@@ -1,17 +1,15 @@
-import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { PageHero } from "@/components/marketing/PageHero";
 import {
-  MarketingTrustBand,
   MarketingTrustPillars,
   MarketingFaqBlock,
 } from "@/components/marketing/MarketingTrust";
+import { CapitalPageCta } from "@/components/marketing/CapitalSections";
 import { Container } from "@/components/ui/section";
-import { Button } from "@/components/ui/button";
 import { FadeIn } from "@/components/motion/Motion";
 import { HERO_CHART, HERO_PAIRS, MARKET_FEATURED_INDICES } from "@/constants/markets-demo";
-import { ArrowRight, CandlestickChart, LineChart, Users, Zap } from "@/lib/icons";
+import { CandlestickChart, LineChart, Users, Zap } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 const features = [
@@ -114,10 +112,8 @@ export default function TradingRoomPage() {
         badge={t("pages.tradingRoomBadge")}
         title={t("pages.tradingRoomTitle")}
         subtitle={t("pages.tradingRoomSubtitle")}
-        cta={{ label: t("pages.roomCta"), href: "/auth?mode=register" }}
+        cta={{ label: t("capital.openAccount"), href: "/auth?mode=register" }}
       />
-
-      <MarketingTrustBand />
 
       <section className="pb-16 pt-12 md:pb-24 md:pt-16">
         <Container>
@@ -185,7 +181,7 @@ export default function TradingRoomPage() {
         </Container>
       </section>
 
-      <MarketingTrustPillars className="border-t border-border bg-secondary/10" />
+      <MarketingTrustPillars />
 
       <MarketingFaqBlock
         titleKey="pages.roomFaqTitle"
@@ -196,21 +192,7 @@ export default function TradingRoomPage() {
         ]}
       />
 
-      <section className="border-t border-border pb-20 pt-10">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-border bg-emerald/[0.04] p-6 sm:flex-row sm:items-center sm:p-8">
-            <div>
-              <h2 className="font-display text-xl font-bold md:text-2xl">{t("pages.roomReadyTitle")}</h2>
-              <p className="mt-1 text-sm text-muted">{t("pages.roomReadyDesc")}</p>
-            </div>
-            <Button asChild size="lg" className="shrink-0">
-              <Link to="/auth">
-                {t("common.signIn")} <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </section>
+      <CapitalPageCta title={t("pages.roomReadyTitle")} subtitle={t("pages.roomReadyDesc")} />
     </>
   );
 }

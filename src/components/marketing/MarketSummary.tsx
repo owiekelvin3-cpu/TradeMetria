@@ -365,28 +365,26 @@ export function MarketSummary() {
   };
 
   return (
-    <div id="markets" className="relative scroll-mt-20 overflow-hidden border-t border-border py-14 md:py-20">
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.08),transparent_55%)]" />
-      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-20" />
-
+    <div id="markets" className="relative scroll-mt-28 overflow-hidden border-t border-border bg-[#141212] py-16 md:py-24">
       <Container className="relative">
         <FadeIn className="mb-10 md:mb-12">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
-            <div>
+            <div className="max-w-3xl">
               <div className="mb-3 flex flex-wrap items-center gap-3">
-                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">{t("markets.eyebrow")}</p>
                 <LiveBadge />
               </div>
-              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
-                {t("markets.title")}
+              <h2 className="font-display text-3xl font-bold tracking-tight text-foreground sm:text-4xl md:text-5xl md:leading-[1.08]">
+                {t("capital.marketsTitle1")}
+                <br />
+                {t("capital.marketsTitle2")}
               </h2>
-              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">{t("markets.subtitle")}</p>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">{t("capital.marketsSubtitle")}</p>
             </div>
             <Link
               to="/trading-room"
-              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-emerald/30 bg-emerald/[0.08] px-5 py-2.5 text-sm font-semibold text-emerald transition-all hover:border-emerald/50 hover:bg-emerald/15 hover:shadow-[0_0_24px_rgba(16,185,129,0.15)]"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-void transition-colors hover:bg-[#f4f3f3]"
             >
-              {t("markets.launchChart")}
+              {t("capital.exploreMarkets")}
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

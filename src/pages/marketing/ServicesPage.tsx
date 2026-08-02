@@ -2,12 +2,11 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PageHero } from "@/components/marketing/PageHero";
 import {
-  MarketingTrustBand,
   MarketingTrustPillars,
   MarketingFaqBlock,
 } from "@/components/marketing/MarketingTrust";
+import { CapitalPageCta } from "@/components/marketing/CapitalSections";
 import { Container } from "@/components/ui/section";
-import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import {
   ArrowRight, Building2, Copy, Pickaxe, TrendingUp, LineChart, Bot, Radio, BarChart3,
@@ -47,10 +46,8 @@ export default function ServicesPage() {
         badge={t("nav.services")}
         title={t("services.pageTitle")}
         subtitle={t("services.pageSubtitle")}
-        cta={{ label: t("common.getStarted"), href: "/auth?mode=register" }}
+        cta={{ label: t("capital.openAccount"), href: "/auth?mode=register" }}
       />
-
-      <MarketingTrustBand />
 
       <section className="pb-16 pt-12 md:pb-24 md:pt-16">
         <Container>
@@ -139,7 +136,7 @@ export default function ServicesPage() {
         </Container>
       </section>
 
-      <MarketingTrustPillars className="border-t border-border bg-secondary/10" />
+      <MarketingTrustPillars />
 
       <MarketingFaqBlock
         titleKey="services.faqTitle"
@@ -150,21 +147,7 @@ export default function ServicesPage() {
         ]}
       />
 
-      <section className="border-t border-border pb-20 pt-10">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-6 rounded-2xl border border-border bg-emerald/[0.04] p-6 sm:flex-row sm:items-center sm:p-8">
-            <div>
-              <h2 className="font-display text-xl font-bold md:text-2xl">{t("services.ctaTitle")}</h2>
-              <p className="mt-1 text-sm text-muted">{t("services.ctaSub")}</p>
-            </div>
-            <Button asChild size="lg" className="shrink-0">
-              <Link to="/auth?mode=register">
-                {t("common.getStarted")} <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </section>
+      <CapitalPageCta title={t("services.ctaTitle")} subtitle={t("services.ctaSub")} />
     </>
   );
 }

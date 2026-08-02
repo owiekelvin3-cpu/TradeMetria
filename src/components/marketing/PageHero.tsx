@@ -5,7 +5,7 @@ import { Container } from "@/components/ui/section";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-/** Clean TradingView-style page header — brand title, short subtitle, optional CTA. */
+/** Capital.com-style page header — regulatory line, large headline, white CTA. */
 export function PageHero({
   badge,
   title,
@@ -21,12 +21,11 @@ export function PageHero({
   children?: React.ReactNode;
   align?: "left" | "center";
   cta?: { label: string; href: string };
-  /** Kept for compatibility — unused in the clean TV-style hero */
   image?: string;
 }) {
   void _image;
   return (
-    <section className="relative overflow-hidden border-b border-border/60 pb-10 pt-8 md:pb-14 md:pt-12">
+    <section className="border-b border-border bg-void pb-12 pt-10 md:pb-16 md:pt-14">
       <Container>
         <FadeIn
           className={cn(
@@ -35,7 +34,7 @@ export function PageHero({
           )}
         >
           {badge && (
-            <p className="mb-3 text-xs font-semibold uppercase tracking-[0.18em] text-emerald">
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.16em] text-muted">
               {badge}
             </p>
           )}
@@ -43,18 +42,18 @@ export function PageHero({
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55 }}
-            className="font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-[3.25rem] md:leading-[1.08]"
+            className="font-display text-4xl font-bold leading-[1.06] tracking-tight text-foreground sm:text-5xl md:text-[3.25rem]"
           >
             {title}
           </motion.h1>
           {subtitle && (
-            <p className={cn("mt-4 max-w-2xl text-base text-muted md:text-lg", align === "center" && "mx-auto")}>
+            <p className={cn("mt-4 max-w-2xl text-sm leading-relaxed text-muted md:text-base", align === "center" && "mx-auto")}>
               {subtitle}
             </p>
           )}
           {cta && (
-            <div className={cn("mt-7", align === "center" && "flex justify-center")}>
-              <Button asChild size="lg">
+            <div className={cn("mt-8 flex flex-col gap-3 sm:flex-row", align === "center" && "justify-center")}>
+              <Button asChild size="lg" className="w-full sm:w-auto">
                 <Link to={cta.href}>{cta.label}</Link>
               </Button>
             </div>

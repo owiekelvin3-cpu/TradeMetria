@@ -2,15 +2,14 @@ import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { PageHero } from "@/components/marketing/PageHero";
 import {
-  MarketingTrustBand,
   MarketingTrustPillars,
   MarketingFaqBlock,
 } from "@/components/marketing/MarketingTrust";
+import { CapitalPageCta } from "@/components/marketing/CapitalSections";
 import { Container } from "@/components/ui/section";
-import { Button } from "@/components/ui/button";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import { MARKET_INSIGHTS } from "@/constants/markets-demo";
-import { AlertTriangle, ArrowRight, TrendingDown, TrendingUp } from "@/lib/icons";
+import { AlertTriangle, TrendingDown, TrendingUp } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
 const signals = [
@@ -38,10 +37,8 @@ export default function TradingSignalsPage() {
         badge={t("pages.signalsBadge")}
         title={t("pages.signalsTitle")}
         subtitle={t("pages.signalsSubtitle")}
-        cta={{ label: t("pages.signalsCta"), href: "/auth?mode=register" }}
+        cta={{ label: t("capital.openAccount"), href: "/auth?mode=register" }}
       />
-
-      <MarketingTrustBand />
 
       <section className="pb-14 pt-12 md:pb-20 md:pt-16">
         <Container>
@@ -184,21 +181,7 @@ export default function TradingSignalsPage() {
         ]}
       />
 
-      <section className="border-t border-border pb-20 pt-10">
-        <Container>
-          <div className="flex flex-col items-start justify-between gap-4 rounded-2xl border border-border bg-emerald/[0.04] p-6 sm:flex-row sm:items-center sm:p-8">
-            <div>
-              <h2 className="font-display text-xl font-bold md:text-2xl">{t("pages.signalsCtaTitle")}</h2>
-              <p className="mt-1 text-sm text-muted">{t("pages.signalsCtaSub")}</p>
-            </div>
-            <Button asChild size="lg" className="shrink-0">
-              <Link to="/auth">
-                {t("common.getStarted")} <ArrowRight className="ml-1 h-4 w-4" />
-              </Link>
-            </Button>
-          </div>
-        </Container>
-      </section>
+      <CapitalPageCta title={t("pages.signalsCtaTitle")} subtitle={t("pages.signalsCtaSub")} />
     </>
   );
 }

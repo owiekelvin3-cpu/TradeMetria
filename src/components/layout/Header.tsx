@@ -171,10 +171,10 @@ export function Header() {
         animate={{ y: hidden ? -110 : 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          "fixed left-0 right-0 top-0 z-50 border-b transition-colors duration-300 pt-[env(safe-area-inset-top)]",
+          "fixed left-0 right-0 top-[var(--risk-bar-height,0px)] z-50 border-b transition-colors duration-300 pt-[env(safe-area-inset-top)]",
           scrolled
-            ? "border-border bg-void/90 backdrop-blur-xl"
-            : "border-transparent bg-void/40 backdrop-blur-md"
+            ? "border-border bg-void/95 backdrop-blur-xl"
+            : "border-border/60 bg-void/90 backdrop-blur-md"
         )}
       >
         <nav
@@ -223,18 +223,18 @@ export function Header() {
           <div className="hidden items-center gap-2 lg:flex">
             <ThemeToggle />
             <LanguageSelector />
-            <Button variant="ghost" size="sm" asChild>
-              <Link to="/auth">{t("common.signIn")}</Link>
+            <Button variant="ghost" size="sm" asChild className="text-muted hover:text-foreground">
+              <Link to="/auth">{t("capital.logIn")}</Link>
             </Button>
-            <Button size="sm" asChild>
-              <Link to="/auth?mode=register">{t("common.getStarted")}</Link>
+            <Button size="sm" asChild className="rounded-full">
+              <Link to="/auth?mode=register">{t("capital.openAccount")}</Link>
             </Button>
           </div>
 
           {/* TradingView-style mobile top bar: Get started + hamburger */}
           <div className="flex items-center gap-1.5 lg:hidden">
             <Button size="sm" className="h-9 rounded-full px-3.5 text-xs font-semibold" asChild>
-              <Link to="/auth?mode=register">{t("common.getStarted")}</Link>
+              <Link to="/auth?mode=register">{t("capital.openAccount")}</Link>
             </Button>
             <button
               type="button"
@@ -390,10 +390,10 @@ export function Header() {
                   <ThemeToggle />
                 </div>
                 <Button asChild className="h-12 w-full rounded-full text-sm font-semibold">
-                  <Link to="/auth?mode=register">{t("nav.getStartedFree")}</Link>
+                  <Link to="/auth?mode=register">{t("capital.openAccount")}</Link>
                 </Button>
                 <Button variant="ghost" asChild className="w-full text-muted">
-                  <Link to="/auth">{t("common.signIn")}</Link>
+                  <Link to="/auth">{t("capital.logIn")}</Link>
                 </Button>
               </div>
             </motion.aside>
