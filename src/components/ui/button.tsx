@@ -9,7 +9,7 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-full bg-white text-void shadow-none hover:bg-[#f4f3f3]",
+          "rounded-full bg-primary text-primary-foreground shadow-none hover:opacity-90",
         secondary:
           "rounded-full border border-border bg-secondary/60 text-foreground hover:bg-secondary",
         outline:
@@ -22,7 +22,7 @@ const buttonVariants = cva(
         gold:
           "rounded-full bg-emerald text-void hover:bg-emerald-glow",
         pill:
-          "rounded-full bg-white text-void shadow-none hover:bg-[#f4f3f3]",
+          "rounded-full bg-primary text-primary-foreground shadow-none hover:opacity-90",
       },
       size: {
         default: "h-11 px-6 text-sm",

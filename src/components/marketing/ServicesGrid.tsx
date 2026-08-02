@@ -41,7 +41,7 @@ export function ServicesGrid() {
               <Link
                 key={s.titleKey}
                 to={s.href}
-                className="group min-w-[240px] shrink-0 rounded-2xl border border-border/80 bg-[#141212] p-5 transition-colors hover:border-emerald/30 sm:min-w-0"
+                className="group min-w-[240px] shrink-0 rounded-2xl border border-border/80 bg-charcoal p-5 transition-colors hover:border-emerald/30 sm:min-w-0"
               >
                 <s.icon className="mb-3 h-5 w-5 text-emerald" aria-hidden="true" />
                 <h3 className="font-display text-lg font-semibold text-foreground group-hover:text-emerald">

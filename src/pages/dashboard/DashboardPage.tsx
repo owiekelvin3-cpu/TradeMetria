@@ -244,34 +244,34 @@ export default function DashboardPage() {
               </p>
 
               <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/40">
+                <p className="dashboard-hero-label text-[11px] font-semibold uppercase tracking-[0.16em]">
                   {t("dashboard.totalBalance")}
                 </p>
                 <CurrencySelector
                   value={accountCurrency}
                   onChange={handleCurrencyChange}
                   busy={currencyBusy}
-                  className="h-8 min-w-[5.5rem] border-white/25 bg-[#141416] px-2.5 text-xs text-white hover:bg-[#1c1c1f] data-[state=open]:border-white/35 data-[state=open]:bg-[#1c1c1f] [&_svg]:text-white/60"
+                  className="h-8 min-w-[5.5rem] border-border bg-card px-2.5 text-xs text-foreground hover:bg-secondary data-[state=open]:border-emerald/30 data-[state=open]:bg-secondary [&_svg]:text-muted"
                 />
               </div>
 
               {loading ? (
-                <div className="mt-3 h-14 w-52 animate-pulse rounded-2xl bg-white/10" />
+                <div className="dashboard-hero-pulse mt-3 h-14 w-52 animate-pulse rounded-2xl" />
               ) : (
-                <p className="mt-2 font-display text-[2.85rem] font-semibold leading-none tracking-tight text-white sm:text-[3.25rem]">
+                <p className="dashboard-hero-value mt-2 font-display text-[2.85rem] font-semibold leading-none tracking-tight sm:text-[3.25rem]">
                   {balanceParts.prefix ? (
-                    <span className="mr-1 text-[1.65rem] font-medium text-white/65 sm:text-3xl">
+                    <span className="dashboard-hero-value-muted mr-1 text-[1.65rem] font-medium sm:text-3xl">
                       {balanceParts.prefix}
                     </span>
                   ) : null}
                   {balanceParts.whole}
                   {balanceParts.decimals ? (
-                    <span className="text-[1.65rem] font-medium text-white/45 sm:text-3xl">
+                    <span className="dashboard-hero-value-muted text-[1.65rem] font-medium sm:text-3xl">
                       {balanceParts.decimals}
                     </span>
                   ) : null}
                   {balanceParts.suffix ? (
-                    <span className="ml-1 text-[1.65rem] font-medium text-white/65 sm:text-3xl">
+                    <span className="dashboard-hero-value-muted ml-1 text-[1.65rem] font-medium sm:text-3xl">
                       {balanceParts.suffix}
                     </span>
                   ) : null}
@@ -284,7 +284,7 @@ export default function DashboardPage() {
                     "inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium",
                     kycApproved
                       ? "bg-emerald/15 text-emerald-soft"
-                      : "bg-white/8 text-white/70"
+                      : "dashboard-hero-surface text-foreground/80"
                   )}
                 >
                   <ShieldCheck className="h-3.5 w-3.5" />
@@ -310,7 +310,7 @@ export default function DashboardPage() {
 
             <div className="relative hidden h-36 text-emerald-soft lg:block">
               {loading ? (
-                <div className="h-full animate-pulse rounded-2xl bg-white/5" />
+                <div className="dashboard-hero-pulse h-full animate-pulse rounded-2xl" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={chartData}>
@@ -338,20 +338,20 @@ export default function DashboardPage() {
           {!kycApproved && (
             <Link
               to="/dashboard/kyc"
-              className="mt-6 flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] px-4 py-3 transition-colors hover:bg-white/[0.07]"
+              className="dashboard-hero-surface mt-6 flex items-center gap-3 rounded-2xl px-4 py-3 transition-colors"
             >
               <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-gold/15 text-gold">
                 <ShieldCheck className="h-4 w-4" />
               </span>
               <span className="min-w-0 flex-1 text-left">
-                <span className="block text-sm font-medium text-white">
+                <span className="dashboard-hero-value block text-sm font-medium">
                   {t("dashboard.completeVerification")}
                 </span>
-                <span className="mt-0.5 block text-xs text-white/50">
+                <span className="dashboard-hero-muted mt-0.5 block text-xs">
                   {t("dashboard.completeVerificationDesc")}
                 </span>
               </span>
-              <ChevronRight className="h-4 w-4 shrink-0 text-white/40" />
+              <ChevronRight className="dashboard-hero-label h-4 w-4 shrink-0" />
             </Link>
           )}
         </section>

@@ -18,7 +18,7 @@ export function PlatformStrip() {
   const { t } = useTranslation();
 
   return (
-    <div className="border-b border-border/70 bg-[#141212]">
+    <div className="border-b border-border/70 bg-charcoal">
       <Container>
         <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 py-5 md:gap-x-10 md:py-6">
           {PLATFORMS.map(({ icon: Icon, labelKey }) => (
@@ -76,7 +76,7 @@ export function CapitalPlatformsSection() {
             <FadeIn key={card.titleKey} delay={i * 0.06}>
               <Link
                 to={card.href}
-                className="group flex h-full flex-col rounded-2xl border border-border/80 bg-[#141212] p-6 transition-colors hover:border-emerald/30"
+                className="group flex h-full flex-col rounded-2xl border border-border/80 bg-charcoal p-6 transition-colors hover:border-emerald/30"
               >
                 <h3 className="font-display text-lg font-semibold text-foreground">{t(card.titleKey)}</h3>
                 <p className="mt-2 flex-1 text-sm leading-relaxed text-muted">{t(card.descKey)}</p>
@@ -102,7 +102,7 @@ export function CapitalPricingSection() {
   ] as const;
 
   return (
-    <Section className="border-t border-border bg-[#141212] py-16 md:py-24">
+    <Section className="border-t border-border bg-charcoal py-16 md:py-24">
       <Container>
         <FadeIn className="mx-auto max-w-3xl text-center">
           <h2 className="font-display text-3xl font-bold tracking-tight text-foreground md:text-5xl md:leading-[1.08]">
@@ -154,7 +154,7 @@ export function CapitalDecisionSection() {
         <div className="mt-12 grid gap-4 md:grid-cols-3">
           {steps.map((step, i) => (
             <FadeIn key={step.titleKey} delay={i * 0.07}>
-              <div className="h-full rounded-2xl border border-border/70 bg-[#141212] p-6">
+              <div className="h-full rounded-2xl border border-border/70 bg-charcoal p-6">
                 <span className="text-xs font-semibold uppercase tracking-wider text-muted">
                   {String(i + 1).padStart(2, "0")}
                 </span>
@@ -187,7 +187,7 @@ export function CapitalPageCta({
   const { t } = useTranslation();
 
   return (
-    <Section className={cn("border-t border-border bg-[#141212] py-14 md:py-20", className)}>
+    <Section className={cn("border-t border-border bg-charcoal py-14 md:py-20", className)}>
       <Container>
         <FadeIn className="mx-auto max-w-2xl text-center">
           <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-4xl">{title}</h2>

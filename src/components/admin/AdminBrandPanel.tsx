@@ -8,7 +8,7 @@ export function AdminBrandPanel() {
   const { t } = useTranslation();
 
   return (
-    <div className="relative hidden min-h-screen flex-col justify-between overflow-hidden bg-[#060608] p-10 lg:flex lg:w-[48%] xl:p-14">
+    <div className="relative hidden min-h-screen flex-col justify-between overflow-hidden bg-void p-10 lg:flex lg:w-[48%] xl:p-14">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_left,rgba(201,162,39,0.08),transparent_50%)]" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_right,rgba(16,185,129,0.06),transparent_55%)]" />
 

@@ -253,6 +253,12 @@
       linear-gradient(135deg, rgba(251, 190, 91, 0.35), rgba(255, 255, 255, 0.08), rgba(209, 136, 18, 0.2)) border-box;
   }
 
+  :root.light .border-gradient {
+    background:
+      linear-gradient(var(--color-card), var(--color-card)) padding-box,
+      linear-gradient(135deg, rgba(251, 190, 91, 0.45), rgba(5, 2, 2, 0.08), rgba(209, 136, 18, 0.25)) border-box;
+  }
+
   .text-gradient {
     background: linear-gradient(135deg, #ffffff 0%, #e9e8e8 60%, #908a8a 100%);
     -webkit-background-clip: text;
@@ -430,6 +436,15 @@
 
   /* Finance hero — void base with soft brand washes */
   .dashboard-hero {
+    --hero-text: #ffffff;
+    --hero-text-muted: rgb(255 255 255 / 0.55);
+    --hero-text-subtle: rgb(255 255 255 / 0.65);
+    --hero-text-faint: rgb(255 255 255 / 0.4);
+    --hero-border: rgb(255 255 255 / 0.1);
+    --hero-surface: rgb(255 255 255 / 0.04);
+    --hero-surface-hover: rgb(255 255 255 / 0.07);
+    --hero-chart-surface: rgb(0 0 0 / 0.2);
+    --hero-pulse: rgb(255 255 255 / 0.1);
     @apply relative overflow-hidden rounded-[1.75rem] border border-white/8 bg-[#141212] text-white shadow-[0_18px_48px_rgba(0,0,0,0.35)];
     background-image:
       radial-gradient(ellipse 70% 55% at 0% -10%, color-mix(in oklab, var(--color-emerald) 14%, transparent), transparent 58%),
@@ -438,11 +453,57 @@
   }
 
   :root.light .dashboard-hero {
-    box-shadow: 0 20px 44px rgba(5, 2, 2, 0.14);
+    --hero-text: #050202;
+    --hero-text-muted: #706c6c;
+    --hero-text-subtle: rgb(5 2 2 / 0.65);
+    --hero-text-faint: rgb(5 2 2 / 0.45);
+    --hero-border: rgb(5 2 2 / 0.1);
+    --hero-surface: rgb(5 2 2 / 0.04);
+    --hero-surface-hover: rgb(5 2 2 / 0.07);
+    --hero-chart-surface: rgb(5 2 2 / 0.04);
+    --hero-pulse: rgb(5 2 2 / 0.08);
+    color: var(--hero-text);
+    border-color: rgb(5 2 2 / 0.1);
+    background-color: #ffffff;
+    background-image:
+      radial-gradient(ellipse 70% 55% at 0% -10%, rgba(251, 190, 91, 0.12), transparent 58%),
+      radial-gradient(ellipse 45% 40% at 100% 0%, rgba(209, 136, 18, 0.08), transparent 52%),
+      linear-gradient(165deg, #ffffff 0%, #f4f3f3 58%, #e9e8e8 100%);
+    box-shadow: 0 20px 44px rgba(5, 2, 2, 0.08);
   }
 
   .dashboard-hero-muted {
-    color: rgba(255, 255, 255, 0.55);
+    color: var(--hero-text-muted);
+  }
+
+  .dashboard-hero-label {
+    color: var(--hero-text-faint);
+  }
+
+  .dashboard-hero-value {
+    color: var(--hero-text);
+  }
+
+  .dashboard-hero-value-muted {
+    color: var(--hero-text-subtle);
+  }
+
+  .dashboard-hero-surface {
+    border: 1px solid var(--hero-border);
+    background: var(--hero-surface);
+  }
+
+  .dashboard-hero-surface:hover {
+    background: var(--hero-surface-hover);
+  }
+
+  .dashboard-hero-chart {
+    border: 1px solid var(--hero-border);
+    background: var(--hero-chart-surface);
+  }
+
+  .dashboard-hero-pulse {
+    background: var(--hero-pulse);
   }
 
   /* Elevated content sheet */
@@ -483,12 +544,24 @@
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-void transition-colors hover:bg-white/90;
   }
 
+  :root.light .dashboard-pill-primary {
+    @apply bg-void text-white hover:bg-charcoal;
+  }
+
   .dashboard-pill-secondary {
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-full border border-white/12 bg-white/[0.07] px-5 text-sm font-semibold text-white backdrop-blur-md transition-colors hover:bg-white/12;
   }
 
+  :root.light .dashboard-pill-secondary {
+    @apply border-border bg-secondary text-foreground hover:bg-secondary/80;
+  }
+
   .dashboard-pill-emerald {
     @apply inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-void transition-colors hover:bg-[#f4f3f3];
+  }
+
+  :root.light .dashboard-pill-emerald {
+    @apply bg-void text-white hover:bg-charcoal;
   }
 
   .dashboard-row {
@@ -531,9 +604,18 @@
     @apply flex h-11 min-w-[3.25rem] flex-1 flex-col items-center justify-center rounded-full text-[10px] font-medium text-white/55 transition-colors;
   }
 
+  :root.light .dashboard-dock-item {
+    @apply text-muted;
+  }
+
   .dashboard-dock-item[aria-current="page"],
   .dashboard-dock-item-active {
     @apply bg-white text-void;
+  }
+
+  :root.light .dashboard-dock-item[aria-current="page"],
+  :root.light .dashboard-dock-item-active {
+    @apply bg-void text-foreground shadow-sm;
   }
 
   .dashboard-sidebar {
@@ -605,7 +687,7 @@
   }
 
   :root.light .nav-item-active {
-    @apply bg-emerald/10 text-emerald;
+    @apply bg-emerald/10 text-foreground;
   }
 
   .nav-item-active::before {

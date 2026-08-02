@@ -365,7 +365,7 @@ export function MarketSummary() {
   };
 
   return (
-    <div id="markets" className="relative scroll-mt-28 overflow-hidden border-t border-border bg-[#141212] py-16 md:py-24">
+    <div id="markets" className="relative scroll-mt-28 overflow-hidden border-t border-border bg-charcoal py-16 md:py-24">
       <Container className="relative">
         <FadeIn className="mb-10 md:mb-12">
           <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">

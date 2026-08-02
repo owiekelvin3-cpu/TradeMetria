@@ -5,7 +5,7 @@ export function RiskDisclaimerBar() {
 
   return (
     <div
-      className="sticky top-0 z-[60] border-b border-border/80 bg-[#141212] px-4 py-2.5 text-center text-[11px] leading-relaxed text-muted sm:px-6 sm:text-xs"
+      className="sticky top-0 z-[60] border-b border-border/80 bg-charcoal px-4 py-2.5 text-center text-[11px] leading-relaxed text-muted sm:px-6 sm:text-xs"
       role="note"
     >
       <p>{t("capital.riskDisclaimer")}</p>

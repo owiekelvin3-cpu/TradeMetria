@@ -201,7 +201,7 @@ export default function PortfolioPage() {
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_minmax(220px,320px)] lg:items-end">
             <div>
               <div className="flex flex-wrap items-center gap-2">
-                <p className="text-[11px] font-semibold uppercase tracking-[0.16em] text-white/45">
+                <p className="dashboard-hero-label text-[11px] font-semibold uppercase tracking-[0.16em]">
                   {t("portfolio.totalValue")}
                 </p>
                 <span className="inline-flex items-center gap-1 rounded-full border border-emerald/30 bg-emerald/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald">
@@ -214,26 +214,26 @@ export default function PortfolioPage() {
               </div>
 
               {pageLoading ? (
-                <div className="mt-4 h-14 w-56 animate-pulse rounded-2xl bg-white/10" />
+                <div className="dashboard-hero-pulse mt-4 h-14 w-56 animate-pulse rounded-2xl" />
               ) : (
                 <motion.p
                   key={data?.balance}
                   initial={{ opacity: 0, y: 8 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl"
+                  className="dashboard-hero-value mt-3 font-display text-4xl font-semibold tracking-tight sm:text-5xl"
                 >
                   {money(data?.balance ?? 0)}
                 </motion.p>
               )}
 
               <div className="mt-4 flex flex-wrap gap-3">
-                <Button asChild size="sm" className="rounded-full bg-white text-void hover:bg-white/90">
+                <Button asChild size="sm" className="rounded-full">
                   <Link to="/dashboard/deposits">
                     <ArrowDownToLine className="h-4 w-4" />
                     {t("portfolio.addFunds")}
                   </Link>
                 </Button>
-                <Button asChild size="sm" variant="outline" className="rounded-full border-white/20 bg-white/5 text-white hover:bg-white/10">
+                <Button asChild size="sm" variant="outline" className="dashboard-pill-secondary rounded-full px-4">
                   <Link to="/dashboard/trading-room">
                     <TrendingUp className="h-4 w-4" />
                     {t("portfolio.trade")}
@@ -242,9 +242,9 @@ export default function PortfolioPage() {
               </div>
             </div>
 
-            <div className="h-[140px] min-h-[120px] rounded-2xl border border-white/10 bg-black/20 p-2 sm:h-[160px]">
+            <div className="dashboard-hero-chart h-[140px] min-h-[120px] rounded-2xl p-2 sm:h-[160px]">
               {pageLoading ? (
-                <div className="h-full animate-pulse rounded-xl bg-white/5" />
+                <div className="dashboard-hero-pulse h-full animate-pulse rounded-xl" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
                   <AreaChart data={data?.chartData ?? []}>
@@ -258,10 +258,11 @@ export default function PortfolioPage() {
                     <YAxis hide domain={["auto", "auto"]} />
                     <Tooltip
                       contentStyle={{
-                        background: "#111113",
-                        border: "1px solid rgba(255,255,255,0.1)",
+                        background: "var(--color-card)",
+                        border: "1px solid var(--color-border)",
                         borderRadius: 12,
                         fontSize: 12,
+                        color: "var(--color-foreground)",
                       }}
                       formatter={(v) => [money(Number(v ?? 0)), t("portfolio.value")]}
                     />

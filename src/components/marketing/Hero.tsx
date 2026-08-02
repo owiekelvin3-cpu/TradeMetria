@@ -28,7 +28,7 @@ function PlatformHeroVideo() {
   }, []);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-[#141212]">
+    <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-charcoal">
       <div className="flex items-center justify-between border-b border-border/70 px-4 py-2.5 sm:px-5">
         <span className="text-xs font-medium text-muted">{t("hero.videoLabel", { brand: BRAND.shortName })}</span>
         <span className="rounded-full bg-white/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-foreground">
@@ -94,7 +94,7 @@ export function Hero() {
               {badges.map((badge) => (
                 <span
                   key={badge}
-                  className="rounded-full border border-border bg-[#141212] px-3 py-1 text-[11px] font-medium text-muted sm:text-xs"
+                  className="rounded-full border border-border bg-charcoal px-3 py-1 text-[11px] font-medium text-muted sm:text-xs"
                 >
                   {badge}
                 </span>

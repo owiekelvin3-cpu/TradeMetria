@@ -54,7 +54,7 @@ export function Footer() {
   ] as const;
 
   return (
-    <footer className="relative mt-8 border-t border-border bg-[#141212] pb-[max(2rem,env(safe-area-inset-bottom))] pt-12 sm:mt-12 sm:pt-16">
+    <footer className="relative mt-8 border-t border-border bg-charcoal pb-[max(2rem,env(safe-area-inset-bottom))] pt-12 sm:mt-12 sm:pt-16">
       <Container>
         <FadeIn className="mb-10 border-b border-border/70 pb-8 text-center sm:mb-12">
           <p className="text-sm text-muted">{t("capital.footerContact")}</p>
