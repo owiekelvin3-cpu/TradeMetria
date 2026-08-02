@@ -1,6 +1,6 @@
 export const ar = {
   common: {
-    brand: "TradeMetria",
+    brand: "CapitalAI",
     signIn: "تسجيل الدخول",
     signOut: "تسجيل الخروج",
     openAccount: "فتح حساب",

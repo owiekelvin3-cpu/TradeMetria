@@ -16,32 +16,23 @@ const sizes = {
   lg: { icon: "h-9 w-9", word: "text-[19px]", gap: "gap-3" },
 };
 
-/**
- * TradingView-style mark: three ascending bars + clean single-line wordmark.
- * Flat, geometric, no plate / glow / sparkles.
- */
+/** Photorealistic copper coin mark — CapitalAI brand icon. */
 export function LogoIcon({
   className,
-  variant = "default",
 }: {
   className?: string;
   variant?: "default" | "gold";
 }) {
-  const fill = variant === "gold" ? BRAND.colors.gold : BRAND.colors.emerald;
-
   return (
-    <svg
-      viewBox="0 0 32 32"
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      className={className}
+    <img
+      src="/icons/coin-logo.png"
+      alt=""
+      width={32}
+      height={32}
+      decoding="async"
+      className={cn("shrink-0 object-contain drop-shadow-[0_2px_6px_rgba(0,0,0,0.45)]", className)}
       aria-hidden="true"
-    >
-      {/* Ascending market bars — TradingView-caliber simplicity */}
-      <rect x="2" y="18" width="7" height="12" rx="1.5" fill={fill} opacity="0.55" />
-      <rect x="12.5" y="10" width="7" height="20" rx="1.5" fill={fill} opacity="0.8" />
-      <rect x="23" y="2" width="7" height="28" rx="1.5" fill={fill} />
-    </svg>
+    />
   );
 }
 
@@ -57,7 +48,7 @@ export function Logo({
 
   return (
     <span className={cn("inline-flex items-center", s.gap, className)}>
-      <LogoIcon className={cn(s.icon, "shrink-0", iconClassName)} variant={variant} />
+      <LogoIcon className={cn(s.icon, iconClassName)} variant={variant} />
       {showWordmark && (
         <span
           className={cn(

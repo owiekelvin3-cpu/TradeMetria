@@ -9,8 +9,8 @@ import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motio
 import {
   BROKER_FILTERS,
   BROKER_HERO_STAT,
-  TRADEMETRIA_BROKER,
-  TRADEMETRIA_OFFERINGS,
+  CAPITALAI_BROKER,
+  CAPITALAI_OFFERINGS,
   type BrokerAssetFilter,
   type BrokerCard,
 } from "@/constants/brokers-demo";
@@ -95,7 +95,7 @@ export default function BrokersPage() {
   const [filter, setFilter] = useState<BrokerAssetFilter>("all");
 
   const cards = useMemo(() => {
-    const all = [TRADEMETRIA_BROKER, ...TRADEMETRIA_OFFERINGS];
+    const all = [CAPITALAI_BROKER, ...CAPITALAI_OFFERINGS];
     if (filter === "all") return all;
     return all.filter((c) => c.assets.includes(filter));
   }, [filter]);

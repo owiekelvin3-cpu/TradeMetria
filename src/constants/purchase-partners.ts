@@ -1,6 +1,6 @@
 /**
  * External partner sites for users who need to buy crypto or gift cards
- * before depositing on TradeMetria. Update these URLs to your preferred vendors.
+ * before depositing on CapitalAI. Update these URLs to your preferred vendors.
  */
 export interface PurchasePartner {
   id: string;

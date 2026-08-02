@@ -148,9 +148,9 @@
   "product": {
     "eyebrow": "منصة",
     "title": "مصممة للعمل الجاد في السوق",
-    "subtitle": "بدءًا من استراتيجيات الذكاء الاصطناعي ووصولاً إلى التنفيذ المباشر والإشارات المنسقة - تبقى كل أداة في مساحة عمل TradeMetria واحدة.",
+    "subtitle": "بدءًا من استراتيجيات الذكاء الاصطناعي ووصولاً إلى التنفيذ المباشر والإشارات المنسقة - تبقى كل أداة في مساحة عمل CapitalAI واحدة.",
     "aiTitle": "استراتيجيات التداول بالذكاء الاصطناعي",
-    "aiDesc": "قم بتخصيص رأس المال لـ TradeMetria Core أو Momentum أو Alpha. شاهد تراكم الأرباح المباشرة وقم بإجراء عمليات تداول سريعة اختيارية عندما تريد المزيد.",
+    "aiDesc": "قم بتخصيص رأس المال لـ CapitalAI Core أو Momentum أو Alpha. شاهد تراكم الأرباح المباشرة وقم بإجراء عمليات تداول سريعة اختيارية عندما تريد المزيد.",
     "aiCta": "ابدأ التداول بالذكاء الاصطناعي",
     "roomTitle": "غرفة التداول المباشر",
     "roomDesc": "قم بتقديم الطلبات باستخدام تخطيط رسم بياني احترافي، ولوحة المواضع، وسياق الحساب المصمم للجلسات المركزة.",
@@ -205,10 +205,10 @@
     "productsSub": "كل ما تحتاجه للبحث واتخاذ القرار والتداول - في حساب واحد.",
     "exploreCharts": "فتح غرفة التداول",
     "aiTrading": "تجارة الذكاء الاصطناعي",
-    "aiTradingDesc": "قم بتخصيص رأس المال لاستراتيجيات TradeMetria وشاهد الأرباح المباشرة تتراكم تلقائيًا.",
+    "aiTradingDesc": "قم بتخصيص رأس المال لاستراتيجيات CapitalAI وشاهد الأرباح المباشرة تتراكم تلقائيًا.",
     "tradingRoomDesc": "مساحة عمل رسم بياني احترافي مع عروض أسعار مباشرة وتذاكر الطلبات والمواقف.",
     "tagPopular": "Popular",
-    "whyTitle": "Why professionals choose TradeMetria",
+    "whyTitle": "Why professionals choose CapitalAI",
     "whySub": "We combine research, execution, and custody in one account — so you spend less time switching tools and more time making decisions.",
     "why1Title": "One workspace",
     "why1Desc": "Markets, charts, AI strategies, signals, and withdrawals live in a single client portal.",
@@ -710,7 +710,7 @@
       "destination": "وجهة",
       "notes": "ملحوظات",
       "reference": "معرف المرجع",
-      "footer": "هذا هو سجل المعاملات الرسمي الخاص بك في TradeMetria.",
+      "footer": "هذا هو سجل المعاملات الرسمي الخاص بك في CapitalAI.",
       "viewHint": "اضغط على المعاملة لعرض الإيصال"
     }
   },
@@ -1671,7 +1671,7 @@
   "communityPulse": {
     "eyebrow": "المجتمع",
     "title": "حيث يتحرك العالم في الأسواق",
-    "subtitle": "انضم إلى المتداولين والمستثمرين الذين يبحثون في الرسوم البيانية ويشاركون الأفكار ويتصرفون بسياق السوق المباشر — في مساحة TradeMetria واحدةحدة.",
+    "subtitle": "انضم إلى المتداولين والمستثمرين الذين يبحثون في الرسوم البيانية ويشاركون الأفكار ويتصرفون بسياق السوق المباشر — في مساحة CapitalAI واحدةحدة.",
     "cta": "ابدأ مجانًا",
     "explore": "استكشف الأسواق",
     "trendsTitle": "اتجاهات المجتمع",
@@ -1716,7 +1716,7 @@
     "title": "Support",
     "subtitle": "Message our team anytime — we reply in real time.",
     "emptyTitle": "No conversations yet",
-    "emptyDesc": "Start a chat with TradeMetria support. Ask about deposits, withdrawals, trading, or your account.",
+    "emptyDesc": "Start a chat with CapitalAI support. Ask about deposits, withdrawals, trading, or your account.",
     "startConversation": "Start a conversation",
     "startHint": "Tell us briefly what you need help with.",
     "newConversation": "New chat",
@@ -1762,7 +1762,7 @@
     }
   },
   "pwa": {
-    "installTitle": "Install TradeMetria app",
+    "installTitle": "Install CapitalAI app",
     "installDesc": "Open faster from your home screen — works like a native app.",
     "install": "Install"
   },

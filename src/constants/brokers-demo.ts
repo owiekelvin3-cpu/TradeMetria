@@ -1,4 +1,4 @@
-/** Demo broker hub data — TradeMetria-first, TradingView brokers layout. */
+/** Demo broker hub data — CapitalAI-first, TradingView brokers layout. */
 
 export type BrokerAssetFilter = "all" | "crypto" | "forex" | "stocks" | "futures" | "cfds";
 
@@ -26,9 +26,9 @@ export const BROKER_FILTERS: { id: BrokerAssetFilter; labelKey: string }[] = [
   { id: "cfds", labelKey: "brokersPage.filterCfds" },
 ];
 
-export const TRADEMETRIA_BROKER: BrokerCard = {
-  id: "trademetria",
-  name: "TradeMetria",
+export const CAPITALAI_BROKER: BrokerCard = {
+  id: "capitalai",
+  name: "CapitalAI",
   tier: "platinum",
   badge: "Featured",
   assets: ["crypto", "forex", "stocks", "futures", "cfds"],
@@ -41,11 +41,11 @@ export const TRADEMETRIA_BROKER: BrokerCard = {
   description: "Trade crypto, FX, indices, and metals with AI strategies, live charts, and segregated client funds.",
 };
 
-/** Supporting product “cards” that showcase TradeMetria offerings in the same layout. */
-export const TRADEMETRIA_OFFERINGS: BrokerCard[] = [
+/** Supporting product “cards” that showcase CapitalAI offerings in the same layout. */
+export const CAPITALAI_OFFERINGS: BrokerCard[] = [
   {
-    id: "trademetria-crypto",
-    name: "TradeMetria Crypto",
+    id: "capitalai-crypto",
+    name: "CapitalAI Crypto",
     tier: "platinum",
     assets: ["crypto"],
     rating: 4.8,
@@ -56,8 +56,8 @@ export const TRADEMETRIA_OFFERINGS: BrokerCard[] = [
     description: "BTC, ETH, majors and alts with live pricing and one-click orders.",
   },
   {
-    id: "trademetria-forex",
-    name: "TradeMetria Forex",
+    id: "capitalai-forex",
+    name: "CapitalAI Forex",
     tier: "platinum",
     assets: ["forex", "cfds"],
     rating: 4.7,
@@ -68,8 +68,8 @@ export const TRADEMETRIA_OFFERINGS: BrokerCard[] = [
     description: "Major and cross pairs with professional chart workspace.",
   },
   {
-    id: "trademetria-equities",
-    name: "TradeMetria Equities",
+    id: "capitalai-equities",
+    name: "CapitalAI Equities",
     tier: "gold",
     assets: ["stocks", "futures"],
     rating: 4.6,

@@ -7,7 +7,7 @@ import en from "./locales/en.json";
 export const SUPPORTED_LANGUAGES = ["en", "es", "fr", "de", "ar", "zh"] as const;
 export type SupportedLanguage = (typeof SUPPORTED_LANGUAGES)[number];
 
-const STORAGE_KEY = "trademetria-locale";
+const STORAGE_KEY = "capitalai-locale";
 
 const localeLoaders: Record<Exclude<SupportedLanguage, "en">, () => Promise<{ default: Record<string, unknown> }>> = {
   es: () => import("./locales/es.json"),

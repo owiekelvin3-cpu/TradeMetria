@@ -247,3 +247,40 @@ export function syncPortfolioStatusWithDeposits(
     can_withdraw: depositTotal >= status.requirement,
   };
 }
+
+const SETTLED_DEPOSIT_STATUSES = new Set(["completed", "approved"]);
+
+/** Resolve eligibility using RPC with deposit-synced fallback for withdrawal gating. */
+export async function resolveWithdrawalEligibility(userId: string): Promise<WithdrawalEligibility> {
+  const [depositsRes, feesRes, rpcResult] = await Promise.all([
+    supabase.from("deposits").select("amount, status").eq("user_id", userId),
+    supabase.from("user_fees").select("id").eq("user_id", userId).eq("status", "pending"),
+    fetchWithdrawalEligibility().catch(() => null),
+  ]);
+
+  const depositTotal = (depositsRes.data ?? [])
+    .filter((d) => SETTLED_DEPOSIT_STATUSES.has(d.status))
+    .reduce((sum, d) => sum + Number(d.amount), 0);
+  const pendingFeesCount = feesRes.error ? 0 : (feesRes.data?.length ?? 0);
+
+  let portfolio: PortfolioRequirementStatus;
+  if (rpcResult) {
+    portfolio = syncPortfolioStatusWithDeposits(rpcResult.portfolio, depositTotal) ?? rpcResult.portfolio;
+  } else {
+    try {
+      portfolio = await fetchPortfolioStatusForUser(userId, depositTotal);
+    } catch {
+      portfolio = {
+        ...defaultWithdrawalEligibility.portfolio,
+        deposit_total: depositTotal,
+      };
+    }
+  }
+
+  const feesCount = rpcResult?.pending_fees_count ?? pendingFeesCount;
+  return {
+    portfolio,
+    pending_fees_count: feesCount,
+    can_withdraw: portfolio.can_withdraw && feesCount === 0,
+  };
+}

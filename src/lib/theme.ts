@@ -1,10 +1,12 @@
 export type Theme = "dark" | "light";
 
-export const THEME_STORAGE_KEY = "trademetria-theme";
+export const THEME_STORAGE_KEY = "capitalai-theme";
 
 export function getStoredTheme(): Theme {
   try {
-    return localStorage.getItem(THEME_STORAGE_KEY) === "light" ? "light" : "dark";
+    const stored =
+      localStorage.getItem(THEME_STORAGE_KEY) ?? localStorage.getItem("trademetria-theme");
+    return stored === "light" ? "light" : "dark";
   } catch {
     return "dark";
   }

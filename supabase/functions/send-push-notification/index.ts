@@ -20,7 +20,7 @@ Deno.serve(async (req) => {
   try {
     const vapidPublic = Deno.env.get("VAPID_PUBLIC_KEY");
     const vapidPrivate = Deno.env.get("VAPID_PRIVATE_KEY");
-    const vapidSubject = Deno.env.get("VAPID_SUBJECT") ?? "mailto:support@trademetria.ai";
+    const vapidSubject = Deno.env.get("VAPID_SUBJECT") ?? "mailto:support@capitalai.ai";
 
     if (!vapidPublic || !vapidPrivate) {
       return new Response(JSON.stringify({ skipped: true, reason: "VAPID keys not configured" }), {

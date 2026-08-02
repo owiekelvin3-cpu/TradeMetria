@@ -41,7 +41,7 @@ function FeatureMock({ type }: { type: "ai" | "room" | "signals" }) {
     return (
       <div className="rounded-xl border border-border bg-void/60 p-4">
         <div className="mb-3 flex items-center justify-between">
-          <span className="text-xs font-semibold text-emerald">TradeMetria Core</span>
+          <span className="text-xs font-semibold text-emerald">CapitalAI Core</span>
           <span className="text-[10px] text-muted">+0.35%/hr</span>
         </div>
         <div className="mb-3 h-2 overflow-hidden rounded-full bg-secondary">

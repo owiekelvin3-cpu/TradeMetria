@@ -106,7 +106,7 @@
     "platformSignals": "Trading signals",
     "platformsTitle1": "Every screen.",
     "platformsTitle2": "One system.",
-    "platformsSubtitle": "Multiple platforms, all markets, any device. Your trading infrastructure on TradeMetria.",
+    "platformsSubtitle": "Multiple platforms, all markets, any device. Your trading infrastructure on CapitalAI.",
     "platformCardWebTitle": "Web platform",
     "platformCardWebDesc": "Charts, orders, and portfolio context in a focused browser workspace.",
     "platformCardMobileTitle": "Mobile-ready",
@@ -122,7 +122,7 @@
     "pricingFootnote": "See your dashboard and fee schedule for full details on spreads, funding, and any assigned account fees.",
     "decisionEyebrow": "Discipline is visible",
     "decisionTitle": "Set while calm. Act under pressure.",
-    "decisionSubtitle": "TradeMetria surfaces the context you need before you commit — verification, portfolio progress, and risk controls in one place.",
+    "decisionSubtitle": "CapitalAI surfaces the context you need before you commit — verification, portfolio progress, and risk controls in one place.",
     "decisionStep1Title": "Verify your account",
     "decisionStep1Desc": "Complete KYC so deposits, trading, and withdrawals follow a clear compliance path.",
     "decisionStep2Title": "Build your portfolio",
@@ -210,9 +210,9 @@
   "product": {
     "eyebrow": "Platform",
     "title": "Built for serious market work",
-    "subtitle": "From AI strategies to live execution and curated signals — every tool stays in one TradeMetria workspace.",
+    "subtitle": "From AI strategies to live execution and curated signals — every tool stays in one CapitalAI workspace.",
     "aiTitle": "AI Trading strategies",
-    "aiDesc": "Allocate capital to TradeMetria Core, Momentum, or Alpha. Watch live profit accrue and run optional quick trades when you want more.",
+    "aiDesc": "Allocate capital to CapitalAI Core, Momentum, or Alpha. Watch live profit accrue and run optional quick trades when you want more.",
     "aiCta": "Start AI Trading",
     "roomTitle": "Live Trading Room",
     "roomDesc": "Place orders with a professional chart layout, positions panel, and account context designed for focused sessions.",
@@ -240,7 +240,7 @@
   "communityPulse": {
     "eyebrow": "Community",
     "title": "Where the world does markets",
-    "subtitle": "Join traders and investors researching charts, sharing ideas, and acting on live market context — all in one TradeMetria workspace.",
+    "subtitle": "Join traders and investors researching charts, sharing ideas, and acting on live market context — all in one CapitalAI workspace.",
     "cta": "Get started for free",
     "explore": "Explore markets",
     "trendsTitle": "Community trends",
@@ -302,10 +302,10 @@
     "productsSub": "Everything you need to research, decide, and trade — in one account.",
     "exploreCharts": "Open trading room",
     "aiTrading": "AI Trading",
-    "aiTradingDesc": "Allocate capital to TradeMetria strategies and watch live profit accrue automatically.",
+    "aiTradingDesc": "Allocate capital to CapitalAI strategies and watch live profit accrue automatically.",
     "tradingRoomDesc": "Professional chart workspace with live quotes, order tickets, and positions.",
     "tagPopular": "Popular",
-    "whyTitle": "Why professionals choose TradeMetria",
+    "whyTitle": "Why professionals choose CapitalAI",
     "whySub": "We combine research, execution, and custody in one account — so you spend less time switching tools and more time making decisions.",
     "why1Title": "One workspace",
     "why1Desc": "Markets, charts, AI strategies, signals, and withdrawals live in a single client portal.",
@@ -1042,7 +1042,7 @@
     "title": "Support",
     "subtitle": "Message our team anytime — we reply in real time.",
     "emptyTitle": "No conversations yet",
-    "emptyDesc": "Start a chat with TradeMetria support. Ask about deposits, withdrawals, trading, or your account.",
+    "emptyDesc": "Start a chat with CapitalAI support. Ask about deposits, withdrawals, trading, or your account.",
     "startConversation": "Start a conversation",
     "startHint": "Tell us briefly what you need help with.",
     "newConversation": "New chat",
@@ -1218,7 +1218,7 @@
       "destination": "Destination",
       "notes": "Notes",
       "reference": "Reference ID",
-      "footer": "This is your official transaction record on TradeMetria.",
+      "footer": "This is your official transaction record on CapitalAI.",
       "viewHint": "Tap a transaction to view receipt"
     }
   },
@@ -1365,6 +1365,8 @@
     "portfolioProfitNote": "Trading profit does not count toward the deposit requirement. After you meet it, you can withdraw from your full balance.",
     "portfolioDepositCta": "Make a deposit",
     "portfolioBlockMessage": "Complete your portfolio deposit requirement before withdrawing.",
+    "portfolioWithdrawalsLockedTitle": "Withdrawals locked",
+    "portfolioWithdrawalsLockedDesc": "Your portfolio deposit requirement is not complete. Deposit {{amount}} more in approved deposits to unlock withdrawals.",
     "feesBlockMessage": "Outstanding fees must be paid before withdrawing",
     "withdrawalBlocked": "Withdrawals are blocked until all requirements are met."
   },
@@ -2074,7 +2076,7 @@
     "aboutSubtitle": "A regulated wealth management platform built on institutional governance, transparent reporting, and verified custody.",
     "reviewsBadge": "Community",
     "reviewsTitle": "Where traders share ideas",
-    "reviewsSubtitle": "Follow community trends, desk ideas, and reviews from investors building on TradeMetria — with clear rules and verified context.",
+    "reviewsSubtitle": "Follow community trends, desk ideas, and reviews from investors building on CapitalAI — with clear rules and verified context.",
     "communityLiveTitle": "Markets, crypto & finance news",
     "communityLiveSubtitle": "Live headlines from Cointelegraph, Decrypt, BBC Business, CNBC, and Yahoo Finance — plus trending coins from CoinGecko. Research first, then trade.",
     "ideasTitle": "Community ideas",
@@ -2456,7 +2458,7 @@
     "reload": "Reload Page"
   },
   "pwa": {
-    "installTitle": "Install TradeMetria app",
+    "installTitle": "Install CapitalAI app",
     "installDesc": "Open faster from your home screen — works like a native app.",
     "install": "Install"
   }

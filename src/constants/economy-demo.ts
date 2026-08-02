@@ -252,7 +252,7 @@ export const FOREX_NEWS: ForexNewsItem[] = [
     time: "08:42",
     instrument: "EURUSD",
     headline: "Euro steadies as ECB speakers push back on early cuts",
-    provider: "TradeMetria Desk",
+    provider: "CapitalAI Desk",
     top: true,
   },
   {
@@ -268,7 +268,7 @@ export const FOREX_NEWS: ForexNewsItem[] = [
     time: "07:58",
     instrument: "GBPUSD",
     headline: "Cable dips ahead of UK services PMI release",
-    provider: "TradeMetria Desk",
+    provider: "CapitalAI Desk",
   },
   {
     id: "4",
@@ -282,7 +282,7 @@ export const FOREX_NEWS: ForexNewsItem[] = [
     time: "07:12",
     instrument: "AUDUSD",
     headline: "Aussie supported by firmer iron ore and China data",
-    provider: "TradeMetria Desk",
+    provider: "CapitalAI Desk",
     top: true,
   },
   {
@@ -304,7 +304,7 @@ export const FOREX_NEWS: ForexNewsItem[] = [
     time: "06:05",
     instrument: "EURGBP",
     headline: "Cross holds range as both sides await inflation clues",
-    provider: "TradeMetria Desk",
+    provider: "CapitalAI Desk",
   },
   {
     id: "9",

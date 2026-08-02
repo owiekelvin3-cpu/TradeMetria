@@ -1,6 +1,6 @@
 import { Link } from "react-router-dom";
 import {
-  Wallet, ArrowDownToLine, ArrowLeft, Shield, Clock, CheckCircle, AlertTriangle, Coins,
+  Wallet, ArrowDownToLine, ArrowLeft, Shield, Clock, CheckCircle, AlertTriangle, Coins, Lock,
 } from "@/lib/icons";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils";
 import { FadeIn } from "@/components/motion/Motion";
 import type { UserFee } from "@/types/database";
 import type { PortfolioRequirementStatus } from "@/lib/portfolio-requirement";
-import { portfolioProgressPercent } from "@/lib/portfolio-requirement";
+import { isPortfolioRequirementBlocking, portfolioProgressPercent } from "@/lib/portfolio-requirement";
 
 export function WithdrawPageHeader({
   title,
@@ -84,6 +84,7 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
 
   const progress = portfolioProgressPercent(status);
   const met = status.can_withdraw;
+  const blocking = isPortfolioRequirementBlocking(status);
 
   return (
     <div
@@ -92,6 +93,19 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
         met ? "border-emerald/25 bg-emerald/[0.06]" : "border-sky-500/25 bg-sky-500/[0.06]"
       )}
     >
+      {blocking && (
+        <div className="mb-4 flex items-start gap-3 rounded-xl border border-red-500/25 bg-red-500/10 px-3 py-2.5">
+          <Lock className="mt-0.5 h-4 w-4 shrink-0 text-red-400" />
+          <div>
+            <p className="text-sm font-semibold text-red-300">{t("withdrawals.portfolioWithdrawalsLockedTitle")}</p>
+            <p className="mt-0.5 text-xs leading-relaxed text-red-200/80">
+              {t("withdrawals.portfolioWithdrawalsLockedDesc", {
+                amount: formatCurrency(status.remaining),
+              })}
+            </p>
+          </div>
+        </div>
+      )}
       <div className="flex items-start gap-3">
         <div
           className={cn(

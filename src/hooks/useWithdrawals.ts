@@ -1,12 +1,11 @@
 import { useCallback, useState } from "react";
 import i18n from "@/i18n";
 import { supabase } from "@/lib/supabase";
-import { ensureValidSession } from "@/lib/auth-session";
+import { ensureValidSession, withValidSession } from "@/lib/auth-session";
 import { fetchOutstandingFees, sumOutstandingFees } from "@/lib/fees";
 import {
-  defaultWithdrawalEligibility,
-  fetchWithdrawalEligibility,
   isPortfolioRequirementBlocking,
+  resolveWithdrawalEligibility,
   type PortfolioRequirementStatus,
 } from "@/lib/portfolio-requirement";
 import { formatTransactionError } from "@/lib/kyc";
@@ -21,7 +20,16 @@ function matchesFilter(method: string, filter?: WithdrawalFilter) {
   return method === filter;
 }
 
-const defaultPortfolioStatus: PortfolioRequirementStatus = defaultWithdrawalEligibility.portfolio;
+const defaultPortfolioStatus: PortfolioRequirementStatus = {
+  enabled: false,
+  waived: false,
+  source: "none",
+  requirement: 0,
+  deposit_total: 0,
+  remaining: 0,
+  currency: "USD",
+  can_withdraw: true,
+};
 
 export function useWithdrawalData(filter?: WithdrawalFilter) {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
@@ -30,18 +38,25 @@ export function useWithdrawalData(filter?: WithdrawalFilter) {
   const [portfolioStatus, setPortfolioStatus] = useState<PortfolioRequirementStatus>(defaultPortfolioStatus);
 
   const load = useCallback(async (userId: string) => {
-    await ensureValidSession();
-    const [wRes, bRes, fees, eligibility] = await Promise.all([
-      supabase.from("withdrawals").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10),
-      supabase.from("balances").select("amount").eq("user_id", userId).single(),
-      fetchOutstandingFees(userId).catch(() => [] as UserFee[]),
-      fetchWithdrawalEligibility().catch(() => defaultWithdrawalEligibility),
-    ]);
-    const all = wRes.data ?? [];
-    setWithdrawals(filter ? all.filter((w) => matchesFilter(w.method, filter)) : all);
-    setBalance(bRes.data?.amount ?? 0);
-    setOutstandingFees(fees);
-    setPortfolioStatus(eligibility.portfolio);
+    await withValidSession(async () => {
+      const [wRes, bRes, fees, eligibility] = await Promise.all([
+        supabase
+          .from("withdrawals")
+          .select("*")
+          .eq("user_id", userId)
+          .order("created_at", { ascending: false })
+          .limit(10),
+        supabase.from("balances").select("amount").eq("user_id", userId).maybeSingle(),
+        fetchOutstandingFees(userId).catch(() => [] as UserFee[]),
+        resolveWithdrawalEligibility(userId),
+      ]);
+
+      const all = wRes.data ?? [];
+      setWithdrawals(filter ? all.filter((w) => matchesFilter(w.method, filter)) : all);
+      setBalance(Number(bRes.data?.amount ?? 0));
+      setOutstandingFees(fees);
+      setPortfolioStatus(eligibility.portfolio);
+    });
   }, [filter]);
 
   const outstandingTotal = sumOutstandingFees(outstandingFees);
@@ -102,6 +117,18 @@ export function useWithdrawalForm(
     setSuccess(false);
 
     await ensureValidSession();
+
+    const eligibility = await resolveWithdrawalEligibility(userId);
+    if (isPortfolioRequirementBlocking(eligibility.portfolio)) {
+      setMessage(i18n.t("withdrawals.portfolioBlockMessage"));
+      setLoading(false);
+      return false;
+    }
+    if (eligibility.pending_fees_count > 0) {
+      setMessage(i18n.t("withdrawals.feesBlockMessage"));
+      setLoading(false);
+      return false;
+    }
 
     const { data: profile } = await supabase
       .from("profiles")

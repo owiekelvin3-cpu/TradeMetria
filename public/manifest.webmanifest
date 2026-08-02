@@ -1,7 +1,7 @@
 {
   "id": "/",
-  "name": "TradeMetria",
-  "short_name": "TradeMetria",
+  "name": "CapitalAI",
+  "short_name": "CapitalAI",
   "description": "Professional brokerage, wealth management, and trading for private and institutional investors.",
   "start_url": "/dashboard",
   "scope": "/",

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft } from "@/lib/icons";
+import { ArrowLeft, ArrowDownToLine } from "@/lib/icons";
 import { useAuth } from "@/hooks/useAuth";
 import { useWithdrawalData } from "@/hooks/useWithdrawals";
 import { FadeIn } from "@/components/motion/Motion";
@@ -24,7 +24,7 @@ export default function WithdrawalsPage() {
   const { user } = useAuth();
   const {
     withdrawals, balance, outstandingFees, portfolioStatus,
-    canSubmitWithdrawal, load,
+    hasPortfolioRequirementPending, canSubmitWithdrawal, load,
   } = useWithdrawalData();
 
   useEffect(() => {
@@ -73,7 +73,23 @@ export default function WithdrawalsPage() {
               </>
             )}
 
-            {canSubmitWithdrawal && <WithdrawFundsShowcase />}
+            {canSubmitWithdrawal ? (
+              <WithdrawFundsShowcase />
+            ) : (
+              user &&
+              hasPortfolioRequirementPending && (
+                <div className="rounded-2xl border border-dashed border-border bg-secondary/20 px-4 py-6 text-center">
+                  <p className="text-sm font-medium text-foreground">{t("withdrawals.portfolioWithdrawalsLockedTitle")}</p>
+                  <p className="mt-2 text-xs text-muted">{t("withdrawals.portfolioBlockMessage")}</p>
+                  <Button asChild size="sm" className="mt-4 rounded-full">
+                    <Link to="/dashboard/deposits">
+                      <ArrowDownToLine className="h-4 w-4" />
+                      {t("withdrawals.portfolioDepositCta")}
+                    </Link>
+                  </Button>
+                </div>
+              )
+            )}
 
             <WithdrawalHistoryPanel>
               <WithdrawalHistory withdrawals={withdrawals} />

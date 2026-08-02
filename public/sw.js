@@ -9,6 +9,7 @@ const PRECACHE_URLS = [
   "/manifest.webmanifest",
   "/favicon.svg",
   "/logo.svg",
+  "/icons/coin-logo.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png",

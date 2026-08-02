@@ -1,6 +1,6 @@
 export const zh = {
   common: {
-    brand: "TradeMetria",
+    brand: "CapitalAI",
     signIn: "登录",
     signOut: "退出登录",
     openAccount: "开户",

@@ -1,6 +1,6 @@
 export const de = {
   common: {
-    brand: "TradeMetria",
+    brand: "CapitalAI",
     signIn: "Anmelden",
     signOut: "Abmelden",
     openAccount: "Konto eröffnen",
