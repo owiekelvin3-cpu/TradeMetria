@@ -20,6 +20,7 @@ import {
   WithdrawalAlert,
   WithdrawalConfirmBar,
   OutstandingFeesPanel,
+  PortfolioRequirementPanel,
 } from "@/components/dashboard/WithdrawalUi";
 import { FadeIn } from "@/components/motion/Motion";
 import { CRYPTO_ASSETS } from "@/constants/deposit-assets";
@@ -34,8 +35,17 @@ export default function CryptoWithdrawalPage() {
   const coinParam = searchParams.get("coin");
   const validCoin = CRYPTO_ASSETS.some((c) => c.id === coinParam) ? coinParam! : "bitcoin";
 
-  const { withdrawals, balance, outstandingFees, hasOutstandingFees, load } = useWithdrawalData(cryptoFilter);
-  const { loading, message, success, submit, setMessage } = useWithdrawalForm(user?.id, load, hasOutstandingFees);
+  const {
+    withdrawals, balance, outstandingFees, portfolioStatus,
+    hasOutstandingFees, hasPortfolioRequirementPending, canSubmitWithdrawal, load,
+  } = useWithdrawalData(cryptoFilter);
+  const { loading, message, success, submit, setMessage } = useWithdrawalForm(
+    user?.id,
+    load,
+    canSubmitWithdrawal,
+    hasOutstandingFees,
+    hasPortfolioRequirementPending,
+  );
 
   const [selected, setSelected] = useState(validCoin);
   const [amount, setAmount] = useState("");
@@ -94,14 +104,17 @@ export default function CryptoWithdrawalPage() {
             <ProductNotice title={t("withdrawals.formTrustTitle")} body={t("withdrawals.cryptoTrustBody")} />
 
             {user && (
-              <OutstandingFeesPanel
-                fees={outstandingFees}
-                balance={balance}
-                onPaid={() => load(user.id)}
-              />
+              <>
+                <OutstandingFeesPanel
+                  fees={outstandingFees}
+                  balance={balance}
+                  onPaid={() => load(user.id)}
+                />
+                <PortfolioRequirementPanel status={portfolioStatus} />
+              </>
             )}
 
-            {!hasOutstandingFees && (
+            {canSubmitWithdrawal && (
               <div className="rounded-2xl border border-border bg-card p-4">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">
                   {t("withdrawals.selectAsset")}
@@ -130,7 +143,7 @@ export default function CryptoWithdrawalPage() {
               </div>
             )}
 
-            {!hasOutstandingFees && (
+            {canSubmitWithdrawal && (
               <WithdrawalFormPanel description={t("withdrawals.sendCryptoTo", { asset: crypto.label })}>
                 <form onSubmit={requestSubmit} className="space-y-4">
                   <div>

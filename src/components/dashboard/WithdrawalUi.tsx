@@ -10,6 +10,8 @@ import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import { FadeIn } from "@/components/motion/Motion";
 import type { UserFee } from "@/types/database";
+import type { PortfolioRequirementStatus } from "@/lib/portfolio-requirement";
+import { portfolioProgressPercent } from "@/lib/portfolio-requirement";
 
 export function WithdrawPageHeader({
   title,
@@ -70,6 +72,61 @@ export function WithdrawalBalanceBanner({ balance }: { balance: number }) {
             </Link>
           </Button>
         )}
+      </div>
+    </div>
+  );
+}
+
+export function PortfolioRequirementPanel({ status }: { status: PortfolioRequirementStatus }) {
+  const { t } = useTranslation();
+
+  if (!status.enabled || status.waived || status.can_withdraw) return null;
+
+  const progress = portfolioProgressPercent(status);
+
+  return (
+    <div className="rounded-2xl border border-sky-500/25 bg-sky-500/[0.06] p-5">
+      <div className="flex items-start gap-3">
+        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400">
+          <Wallet className="h-4 w-4" />
+        </div>
+        <div className="min-w-0 flex-1">
+          <h2 className="font-display text-sm font-semibold text-foreground">
+            {t("withdrawals.portfolioRequiredTitle")}
+          </h2>
+          <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">
+            {t("withdrawals.portfolioRequiredDesc")}
+          </p>
+          <p className="mt-2 text-sm font-medium text-foreground">
+            {t("withdrawals.portfolioProgress", {
+              deposited: formatCurrency(status.deposit_total),
+              required: formatCurrency(status.requirement),
+            })}
+          </p>
+          <p className="mt-1 text-sm text-sky-400">
+            {t("withdrawals.portfolioRemaining", { amount: formatCurrency(status.remaining) })}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4">
+        <div className="mb-1.5 flex items-center justify-between text-xs text-muted">
+          <span>{t("withdrawals.portfolioDepositsOnly")}</span>
+          <span>{progress}%</span>
+        </div>
+        <div className="h-2 overflow-hidden rounded-full bg-secondary">
+          <div
+            className="h-full rounded-full bg-sky-500 transition-all"
+            style={{ width: `${progress}%` }}
+          />
+        </div>
+      </div>
+
+      <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <p className="text-xs text-muted">{t("withdrawals.portfolioProfitNote")}</p>
+        <Button asChild size="sm">
+          <Link to="/dashboard/deposits">{t("withdrawals.portfolioDepositCta")}</Link>
+        </Button>
       </div>
     </div>
   );

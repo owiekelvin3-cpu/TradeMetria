@@ -39,6 +39,8 @@ export interface Database {
           suspension_reason: string | null;
           admin_notes: string | null;
           preferred_currency: string;
+          portfolio_requirement_override: number | null;
+          portfolio_requirement_waived: boolean;
           created_at: string;
           updated_at: string;
         };
@@ -66,6 +68,8 @@ export interface Database {
           suspension_reason?: string | null;
           admin_notes?: string | null;
           preferred_currency?: string;
+          portfolio_requirement_override?: number | null;
+          portfolio_requirement_waived?: boolean;
           created_at?: string;
           updated_at?: string;
         };
@@ -93,6 +97,8 @@ export interface Database {
           suspension_reason?: string | null;
           admin_notes?: string | null;
           preferred_currency?: string;
+          portfolio_requirement_override?: number | null;
+          portfolio_requirement_waived?: boolean;
           created_at?: string;
           updated_at?: string;
         };

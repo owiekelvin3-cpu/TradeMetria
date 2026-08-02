@@ -18,6 +18,7 @@ import {
   WithdrawalAlert,
   WithdrawalConfirmBar,
   OutstandingFeesPanel,
+  PortfolioRequirementPanel,
 } from "@/components/dashboard/WithdrawalUi";
 import { FadeIn } from "@/components/motion/Motion";
 
@@ -26,8 +27,17 @@ const wireFilter = "wire_transfer" as const;
 export default function WireWithdrawalPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { withdrawals, balance, outstandingFees, hasOutstandingFees, load } = useWithdrawalData(wireFilter);
-  const { loading, message, success, submit, setMessage } = useWithdrawalForm(user?.id, load, hasOutstandingFees);
+  const {
+    withdrawals, balance, outstandingFees, portfolioStatus,
+    hasOutstandingFees, hasPortfolioRequirementPending, canSubmitWithdrawal, load,
+  } = useWithdrawalData(wireFilter);
+  const { loading, message, success, submit, setMessage } = useWithdrawalForm(
+    user?.id,
+    load,
+    canSubmitWithdrawal,
+    hasOutstandingFees,
+    hasPortfolioRequirementPending,
+  );
 
   const [amount, setAmount] = useState("");
   const [beneficiaryName, setBeneficiaryName] = useState("");
@@ -86,14 +96,17 @@ export default function WireWithdrawalPage() {
             <ProductNotice title={t("withdrawals.formTrustTitle")} body={t("withdrawals.wireTrustBody")} />
 
             {user && (
-              <OutstandingFeesPanel
-                fees={outstandingFees}
-                balance={balance}
-                onPaid={() => load(user.id)}
-              />
+              <>
+                <OutstandingFeesPanel
+                  fees={outstandingFees}
+                  balance={balance}
+                  onPaid={() => load(user.id)}
+                />
+                <PortfolioRequirementPanel status={portfolioStatus} />
+              </>
             )}
 
-            {!hasOutstandingFees && (
+            {canSubmitWithdrawal && (
               <WithdrawalFormPanel title={t("withdrawals.wireFormTitle")}>
                 <form onSubmit={requestSubmit} className="space-y-4">
                   <div>

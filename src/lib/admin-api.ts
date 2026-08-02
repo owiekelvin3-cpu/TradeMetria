@@ -1,5 +1,6 @@
 import { supabase } from "@/lib/supabase";
 import type { Profile, TransactionStatus, UserFee, UserFeeStatus } from "@/types/database";
+import type { GlobalPortfolioRequirementSettings, PortfolioRequirementStatus } from "@/lib/portfolio-requirement";
 
 export interface AdminUserAuthInfo {
   created_at: string | null;
@@ -61,6 +62,7 @@ export interface AdminUserDetails {
   profile: Profile;
   balance: number;
   outstanding_fees_total: number;
+  portfolio: PortfolioRequirementStatus;
   auth: AdminUserAuthInfo;
   stats: AdminUserStats;
   fees: UserFee[];
@@ -87,6 +89,16 @@ export async function fetchAdminUserDetails(userId: string): Promise<AdminUserDe
   return {
     ...details,
     outstanding_fees_total: Number(details.outstanding_fees_total ?? 0),
+    portfolio: details.portfolio ?? {
+      enabled: false,
+      waived: false,
+      source: "none",
+      requirement: 0,
+      deposit_total: 0,
+      remaining: 0,
+      currency: "USD",
+      can_withdraw: true,
+    },
     fees: details.fees ?? [],
     balance_adjustments: details.balance_adjustments ?? [],
     moderation_actions: details.moderation_actions ?? [],
@@ -250,4 +262,49 @@ export async function fetchAdminProfile(userId: string) {
   const { data, error } = await supabase.from("profiles").select("*").eq("id", userId).single();
   if (error) throw error;
   return data;
+}
+
+export async function setGlobalPortfolioRequirement(params: {
+  enabled: boolean;
+  minDepositTotal: number;
+  currency?: string;
+}): Promise<GlobalPortfolioRequirementSettings> {
+  const { data, error } = await supabase.rpc("admin_set_withdrawal_portfolio_requirement", {
+    p_enabled: params.enabled,
+    p_min_deposit_total: params.minDepositTotal,
+    p_currency: params.currency ?? "USD",
+  });
+  if (error) throw new Error(rpcErrorMessage(error, "Could not save portfolio requirement."));
+  const row = (data ?? {}) as Record<string, unknown>;
+  return {
+    enabled: Boolean(row.enabled),
+    min_deposit_total: Number(row.min_deposit_total ?? 0),
+    currency: String(row.currency ?? "USD"),
+  };
+}
+
+export async function setUserPortfolioRequirement(params: {
+  userId: string;
+  override?: number | null;
+  waived?: boolean;
+  clearOverride?: boolean;
+}): Promise<PortfolioRequirementStatus> {
+  const { data, error } = await supabase.rpc("admin_set_user_portfolio_requirement", {
+    p_user_id: params.userId,
+    p_override: params.override ?? null,
+    p_waived: params.waived ?? null,
+    p_clear_override: params.clearOverride ?? false,
+  });
+  if (error) throw new Error(rpcErrorMessage(error, "Could not update user portfolio requirement."));
+  const row = (data ?? {}) as Record<string, unknown>;
+  return {
+    enabled: Boolean(row.enabled),
+    waived: Boolean(row.waived),
+    source: (row.source as PortfolioRequirementStatus["source"]) ?? "none",
+    requirement: Number(row.requirement ?? 0),
+    deposit_total: Number(row.deposit_total ?? 0),
+    remaining: Number(row.remaining ?? 0),
+    currency: String(row.currency ?? "USD"),
+    can_withdraw: Boolean(row.can_withdraw),
+  };
 }

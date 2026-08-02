@@ -15,11 +15,12 @@ import { LoadingScreen } from "@/components/ui/loading-screen";
 import {
   fetchAdminUserDetails, sendUserPasswordReset,
   assignUserFee, updateUserFeeStatus, moderateAdminUser, adjustAdminUserBalance,
-  deleteAdminUser,
+  deleteAdminUser, setUserPortfolioRequirement,
   type AdminUserDetails, type AdminModerationUiAction, type AdminBalanceDirection,
 } from "@/lib/admin-api";
 import { createKycDocumentSignedUrl } from "@/lib/kyc";
 import { FEE_TYPES, type FeeTypeId } from "@/constants/fee-types";
+import { portfolioProgressPercent } from "@/lib/portfolio-requirement";
 import { formatCurrency } from "@/lib/utils";
 import { cn } from "@/lib/utils";
 import type { UserFeeStatus } from "@/types/database";
@@ -75,6 +76,9 @@ export function AdminUserDetailPanel({ userId, onClose, onUpdated, onDeleted }: 
   const [feeAmount, setFeeAmount] = useState("");
   const [feeNotes, setFeeNotes] = useState("");
   const [feeBusy, setFeeBusy] = useState(false);
+  const [portfolioOverride, setPortfolioOverride] = useState("");
+  const [portfolioWaived, setPortfolioWaived] = useState(false);
+  const [portfolioBusy, setPortfolioBusy] = useState(false);
   const [moderationReason, setModerationReason] = useState("");
   const [moderationBusy, setModerationBusy] = useState(false);
   const [reasonError, setReasonError] = useState("");
@@ -123,11 +127,19 @@ export function AdminUserDetailPanel({ userId, onClose, onUpdated, onDeleted }: 
     return () => window.removeEventListener("keydown", onKey);
   }, [userId, onClose]);
 
+  useEffect(() => {
+    if (!data?.portfolio) return;
+    setPortfolioWaived(Boolean(data.portfolio.waived));
+    const override = data.profile.portfolio_requirement_override;
+    setPortfolioOverride(override != null ? String(override) : "");
+  }, [data?.portfolio, data?.profile?.portfolio_requirement_override]);
+
   if (!userId) return null;
 
   const profile = data?.profile;
   const auth = data?.auth;
   const stats = data?.stats;
+  const portfolio = data?.portfolio;
   const fees = data?.fees ?? [];
   const balanceAdjustments = data?.balance_adjustments ?? [];
   const moderationActions = data?.moderation_actions ?? [];
@@ -261,6 +273,57 @@ export function AdminUserDetailPanel({ userId, onClose, onUpdated, onDeleted }: 
       setError(err instanceof Error ? err.message : t("admin.userDetail.feeAssignFailed"));
     } finally {
       setFeeBusy(false);
+    }
+  };
+
+  const handleSavePortfolio = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!userId) return;
+
+    const overrideRaw = portfolioOverride.trim();
+    const override = overrideRaw ? parseFloat(overrideRaw) : null;
+    if (overrideRaw && (!override || override <= 0)) {
+      setError(t("admin.userDetail.portfolioInvalidAmount"));
+      return;
+    }
+
+    setPortfolioBusy(true);
+    setError("");
+    setMessage("");
+    try {
+      await setUserPortfolioRequirement({
+        userId,
+        override,
+        waived: portfolioWaived,
+        clearOverride: !overrideRaw,
+      });
+      setMessage(t("admin.userDetail.portfolioSaved"));
+      await load(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("admin.userDetail.portfolioSaveFailed"));
+    } finally {
+      setPortfolioBusy(false);
+    }
+  };
+
+  const handleClearPortfolioOverride = async () => {
+    if (!userId) return;
+    setPortfolioBusy(true);
+    setError("");
+    setMessage("");
+    try {
+      await setUserPortfolioRequirement({
+        userId,
+        clearOverride: true,
+        waived: portfolioWaived,
+      });
+      setPortfolioOverride("");
+      setMessage(t("admin.userDetail.portfolioOverrideCleared"));
+      await load(true);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t("admin.userDetail.portfolioSaveFailed"));
+    } finally {
+      setPortfolioBusy(false);
     }
   };
 
@@ -702,6 +765,104 @@ export function AdminUserDetailPanel({ userId, onClose, onUpdated, onDeleted }: 
                     ))
                   )}
                 </div>
+              </section>
+
+              <section className="rounded-xl border border-border bg-secondary/50 p-4">
+                <h3 className="mb-3 flex items-center gap-2 font-display text-sm font-semibold">
+                  <Wallet className="h-4 w-4 text-sky-400" />
+                  {t("admin.userDetail.portfolioRequirement")}
+                </h3>
+                <p className="mb-4 text-xs leading-relaxed text-muted">
+                  {t("admin.userDetail.portfolioRequirementDesc")}
+                </p>
+
+                {portfolio && (
+                  <div className="mb-4 space-y-2 rounded-lg border border-border bg-secondary/80 p-3 text-sm">
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-muted">{t("admin.userDetail.portfolioDeposited")}</span>
+                      <span className="font-medium">{formatCurrency(portfolio.deposit_total)}</span>
+                    </div>
+                    <div className="flex flex-wrap items-center justify-between gap-2">
+                      <span className="text-muted">{t("admin.userDetail.portfolioRequired")}</span>
+                      <span className="font-medium">
+                        {portfolio.enabled ? formatCurrency(portfolio.requirement) : t("admin.userDetail.portfolioNotRequired")}
+                      </span>
+                    </div>
+                    {portfolio.enabled && !portfolio.can_withdraw && (
+                      <p className="text-xs text-sky-400">
+                        {t("admin.userDetail.portfolioRemaining", { amount: formatCurrency(portfolio.remaining) })}
+                      </p>
+                    )}
+                    {portfolio.enabled && portfolio.requirement > 0 && (
+                      <div className="pt-1">
+                        <div className="mb-1 flex justify-between text-xs text-muted">
+                          <span>{t("admin.userDetail.portfolioProgress")}</span>
+                          <span>{portfolioProgressPercent(portfolio)}%</span>
+                        </div>
+                        <div className="h-1.5 overflow-hidden rounded-full bg-void">
+                          <div
+                            className="h-full rounded-full bg-sky-500"
+                            style={{ width: `${portfolioProgressPercent(portfolio)}%` }}
+                          />
+                        </div>
+                      </div>
+                    )}
+                    <p className="text-xs text-muted">
+                      {t(`admin.userDetail.portfolioSource.${portfolio.source}`)}
+                    </p>
+                  </div>
+                )}
+
+                <form onSubmit={handleSavePortfolio} className="space-y-3 rounded-lg border border-border bg-secondary/80 p-3">
+                  <div>
+                    <Label htmlFor="portfolio-override">{t("admin.userDetail.portfolioOverride")}</Label>
+                    <Input
+                      id="portfolio-override"
+                      type="number"
+                      min="0.01"
+                      step="0.01"
+                      value={portfolioOverride}
+                      onChange={(e) => setPortfolioOverride(e.target.value)}
+                      className="mt-1.5"
+                      placeholder={t("admin.userDetail.portfolioOverridePlaceholder")}
+                    />
+                    <p className="mt-1.5 text-xs text-muted">{t("admin.userDetail.portfolioOverrideHint")}</p>
+                  </div>
+
+                  <label className="flex items-start gap-3 rounded-lg border border-border bg-void/40 p-3">
+                    <input
+                      type="checkbox"
+                      checked={portfolioWaived}
+                      onChange={(e) => setPortfolioWaived(e.target.checked)}
+                      className="mt-1 h-4 w-4 rounded border-border"
+                    />
+                    <span>
+                      <span className="block text-sm font-medium text-foreground">
+                        {t("admin.userDetail.portfolioWaive")}
+                      </span>
+                      <span className="mt-1 block text-xs text-muted">
+                        {t("admin.userDetail.portfolioWaiveHint")}
+                      </span>
+                    </span>
+                  </label>
+
+                  <div className="flex flex-col gap-2 sm:flex-row">
+                    <Button type="submit" size="sm" variant="gold" disabled={portfolioBusy} className="flex-1">
+                      {portfolioBusy ? t("admin.userDetail.portfolioSaving") : t("admin.userDetail.portfolioSave")}
+                    </Button>
+                    {portfolioOverride.trim() && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="outline"
+                        disabled={portfolioBusy}
+                        onClick={() => void handleClearPortfolioOverride()}
+                      >
+                        {t("admin.userDetail.portfolioUseGlobal")}
+                      </Button>
+                    )}
+                  </div>
+                </form>
               </section>
 
               <section className="rounded-xl border border-border bg-secondary/50 p-4">

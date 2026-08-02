@@ -20,6 +20,7 @@ import {
   WithdrawalAlert,
   WithdrawalConfirmBar,
   OutstandingFeesPanel,
+  PortfolioRequirementPanel,
 } from "@/components/dashboard/WithdrawalUi";
 import { FadeIn } from "@/components/motion/Motion";
 import { EWALLET_PROVIDERS } from "@/constants/withdrawal-methods";
@@ -34,8 +35,17 @@ export default function EwalletWithdrawalPage() {
   const providerParam = searchParams.get("provider");
   const validProvider = EWALLET_PROVIDERS.some((p) => p.id === providerParam) ? providerParam! : "paypal";
 
-  const { withdrawals, balance, outstandingFees, hasOutstandingFees, load } = useWithdrawalData(ewalletFilter);
-  const { loading, message, success, submit, setMessage } = useWithdrawalForm(user?.id, load, hasOutstandingFees);
+  const {
+    withdrawals, balance, outstandingFees, portfolioStatus,
+    hasOutstandingFees, hasPortfolioRequirementPending, canSubmitWithdrawal, load,
+  } = useWithdrawalData(ewalletFilter);
+  const { loading, message, success, submit, setMessage } = useWithdrawalForm(
+    user?.id,
+    load,
+    canSubmitWithdrawal,
+    hasOutstandingFees,
+    hasPortfolioRequirementPending,
+  );
 
   const [selected, setSelected] = useState(validProvider);
   const [amount, setAmount] = useState("");
@@ -94,14 +104,17 @@ export default function EwalletWithdrawalPage() {
             <ProductNotice title={t("withdrawals.formTrustTitle")} body={t("withdrawals.ewalletTrustBody")} />
 
             {user && (
-              <OutstandingFeesPanel
-                fees={outstandingFees}
-                balance={balance}
-                onPaid={() => load(user.id)}
-              />
+              <>
+                <OutstandingFeesPanel
+                  fees={outstandingFees}
+                  balance={balance}
+                  onPaid={() => load(user.id)}
+                />
+                <PortfolioRequirementPanel status={portfolioStatus} />
+              </>
             )}
 
-            {!hasOutstandingFees && (
+            {canSubmitWithdrawal && (
               <div className="rounded-2xl border border-border bg-card p-4">
                 <p className="mb-3 text-xs font-semibold uppercase tracking-wider text-muted">
                   {t("withdrawals.selectProvider")}
@@ -130,7 +143,7 @@ export default function EwalletWithdrawalPage() {
               </div>
             )}
 
-            {!hasOutstandingFees && (
+            {canSubmitWithdrawal && (
               <WithdrawalFormPanel description={t("withdrawals.ewalletAccount", { provider: provider.label })}>
                 <form onSubmit={requestSubmit} className="space-y-4">
                   <div>

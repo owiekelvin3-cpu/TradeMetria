@@ -12,6 +12,7 @@ import {
   WithdrawalBalanceBanner,
   WithdrawalHistoryPanel,
   OutstandingFeesPanel,
+  PortfolioRequirementPanel,
 } from "@/components/dashboard/WithdrawalUi";
 import { WithdrawFundsShowcase } from "@/components/dashboard/WithdrawFundsShowcase";
 import { WithdrawalHistory } from "@/components/dashboard/WithdrawalHistory";
@@ -21,7 +22,10 @@ import { KycRequiredGate } from "@/components/dashboard/KycRequiredGate";
 export default function WithdrawalsPage() {
   const { t } = useTranslation();
   const { user } = useAuth();
-  const { withdrawals, balance, outstandingFees, hasOutstandingFees, load } = useWithdrawalData();
+  const {
+    withdrawals, balance, outstandingFees, portfolioStatus,
+    canSubmitWithdrawal, load,
+  } = useWithdrawalData();
 
   useEffect(() => {
     if (user) void load(user.id);
@@ -59,14 +63,17 @@ export default function WithdrawalsPage() {
             />
 
             {user && (
-              <OutstandingFeesPanel
-                fees={outstandingFees}
-                balance={balance}
-                onPaid={() => load(user.id)}
-              />
+              <>
+                <OutstandingFeesPanel
+                  fees={outstandingFees}
+                  balance={balance}
+                  onPaid={() => load(user.id)}
+                />
+                <PortfolioRequirementPanel status={portfolioStatus} />
+              </>
             )}
 
-            {!hasOutstandingFees && <WithdrawFundsShowcase />}
+            {canSubmitWithdrawal && <WithdrawFundsShowcase />}
 
             <WithdrawalHistoryPanel>
               <WithdrawalHistory withdrawals={withdrawals} />
