@@ -1,7 +1,10 @@
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { AnimatePresence, motion } from "framer-motion";
 import { Area, AreaChart, ResponsiveContainer } from "recharts";
-import { FadeIn } from "@/components/motion/Motion";
+import { ArrowRight, TrendingDown, TrendingUp } from "@/lib/icons";
+import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import { Container } from "@/components/ui/section";
 import {
   MARKET_CRYPTO_GAINERS,
@@ -24,18 +27,41 @@ import {
 } from "@/constants/markets-demo";
 import { cn } from "@/lib/utils";
 
-function MiniSpark({ quote, wide = false }: { quote: MarketQuote; wide?: boolean }) {
+type MarketTab = "indices" | "stocks" | "crypto" | "futures" | "forex";
+
+const TAB_IDS: MarketTab[] = ["indices", "stocks", "crypto", "futures", "forex"];
+
+const tabTransition = {
+  initial: { opacity: 0, y: 16, filter: "blur(6px)" },
+  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
+  exit: { opacity: 0, y: -10, filter: "blur(4px)" },
+};
+
+function LiveBadge() {
+  const { t } = useTranslation();
+  return (
+    <span className="inline-flex items-center gap-1.5 rounded-full border border-emerald/25 bg-emerald/[0.08] px-2.5 py-1 text-[10px] font-semibold uppercase tracking-[0.14em] text-emerald">
+      <span className="relative flex h-1.5 w-1.5">
+        <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald opacity-50 motion-reduce:animate-none" />
+        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald" />
+      </span>
+      {t("markets.live")}
+    </span>
+  );
+}
+
+function MiniSpark({ quote, wide = false, delay = 0 }: { quote: MarketQuote; wide?: boolean; delay?: number }) {
   const id = `tv-spark-${quote.symbol.replace(/[^a-zA-Z0-9]/g, "")}-${wide ? "w" : "n"}`;
   const data = quote.sparkline.map((v) => ({ v }));
   const color = quote.up ? "#10b981" : "#f87171";
 
   return (
-    <div className={cn("h-10", wide ? "w-full min-w-[96px]" : "w-20 sm:w-24")}>
+    <div className={cn("h-9 sm:h-10", wide ? "w-full min-w-[88px]" : "w-[72px] sm:w-20")}>
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart data={data}>
           <defs>
             <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.35} />
+              <stop offset="0%" stopColor={color} stopOpacity={0.4} />
               <stop offset="100%" stopColor={color} stopOpacity={0} />
             </linearGradient>
           </defs>
@@ -43,9 +69,11 @@ function MiniSpark({ quote, wide = false }: { quote: MarketQuote; wide?: boolean
             type="monotone"
             dataKey="v"
             stroke={color}
-            strokeWidth={1.5}
+            strokeWidth={1.75}
             fill={`url(#${id})`}
-            isAnimationActive={false}
+            isAnimationActive
+            animationDuration={900}
+            animationBegin={delay}
           />
         </AreaChart>
       </ResponsiveContainer>
@@ -53,24 +81,78 @@ function MiniSpark({ quote, wide = false }: { quote: MarketQuote; wide?: boolean
   );
 }
 
-function FeaturedCard({ quote }: { quote: MarketQuote }) {
+function FeaturedCard({ quote, index }: { quote: MarketQuote; index: number }) {
   return (
-    <Link
-      to="/trading-room"
-      className="group min-w-[168px] shrink-0 rounded-xl border border-border bg-charcoal/40 p-3.5 transition-colors hover:border-emerald/30 hover:bg-emerald/[0.04] sm:min-w-0"
+    <motion.div
+      initial={{ opacity: 0, y: 20, scale: 0.96 }}
+      whileInView={{ opacity: 1, y: 0, scale: 1 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.45, delay: index * 0.06, ease: [0.22, 1, 0.36, 1] }}
+      whileHover={{ y: -4 }}
+      className="min-w-[172px] shrink-0 snap-start sm:min-w-0"
     >
-      <p className="truncate text-sm font-semibold text-foreground group-hover:text-emerald">{quote.name}</p>
-      <p className="mt-0.5 font-mono text-[11px] text-muted">{quote.symbol}</p>
-      <div className="mt-3 flex items-end justify-between gap-2">
-        <div>
-          <p className="font-mono text-sm font-medium text-foreground">{quote.price}</p>
-          <p className={cn("mt-0.5 text-xs font-medium", quote.up ? "text-market-up" : "text-market-down")}>
+      <Link
+        to="/trading-room"
+        className="group relative block overflow-hidden rounded-2xl border border-border/80 bg-gradient-to-br from-card via-card to-secondary/20 p-4 shadow-sm transition-[border-color,box-shadow] duration-300 hover:border-emerald/35 hover:shadow-[0_12px_40px_rgba(16,185,129,0.08)]"
+      >
+        <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-emerald/40 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        <div className="flex items-start justify-between gap-2">
+          <div className="min-w-0">
+            <p className="truncate text-sm font-semibold text-foreground transition-colors group-hover:text-emerald">
+              {quote.name}
+            </p>
+            <p className="mt-0.5 font-mono text-[11px] text-muted">{quote.symbol}</p>
+          </div>
+          <span
+            className={cn(
+              "inline-flex shrink-0 items-center gap-0.5 rounded-md px-1.5 py-0.5 text-[10px] font-semibold",
+              quote.up ? "bg-emerald/10 text-market-up" : "bg-red-500/10 text-market-down"
+            )}
+          >
+            {quote.up ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
             {quote.change}
-          </p>
+          </span>
         </div>
-        <MiniSpark quote={quote} />
+        <div className="mt-4 flex items-end justify-between gap-3">
+          <p className="font-mono text-lg font-semibold tracking-tight text-foreground">{quote.price}</p>
+          <MiniSpark quote={quote} delay={index * 80} />
+        </div>
+      </Link>
+    </motion.div>
+  );
+}
+
+function FeaturedStrip({ quotes }: { quotes: MarketQuote[] }) {
+  return (
+    <div className="-mx-1 flex snap-x snap-mandatory gap-3 overflow-x-auto px-1 pb-2 scrollbar-none sm:grid sm:snap-none sm:grid-cols-3 sm:overflow-visible lg:grid-cols-6">
+      {quotes.map((q, i) => (
+        <FeaturedCard key={q.symbol} quote={q} index={i} />
+      ))}
+    </div>
+  );
+}
+
+function TrendMarquee({ items }: { items: { symbol: string; name: string }[] }) {
+  const loop = [...items, ...items];
+  return (
+    <div className="relative overflow-hidden rounded-2xl border border-border/70 bg-secondary/20 py-3">
+      <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-secondary/20 to-transparent" />
+      <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-secondary/20 to-transparent" />
+      <div className="flex animate-marquee gap-3 whitespace-nowrap will-change-transform motion-reduce:animate-none">
+        {loop.map((item, i) => (
+          <Link
+            key={`${item.symbol}-${i}`}
+            to="/trading-room"
+            className="group inline-flex shrink-0 items-center gap-2 rounded-full border border-border/60 bg-void/50 px-4 py-2 transition-all duration-300 hover:border-emerald/40 hover:bg-emerald/[0.07] hover:shadow-[0_0_20px_rgba(16,185,129,0.12)]"
+          >
+            <span className="font-mono text-xs font-bold text-emerald">{item.symbol}</span>
+            <span className="max-w-[160px] truncate text-xs text-muted transition-colors group-hover:text-foreground">
+              {item.name}
+            </span>
+          </Link>
+        ))}
       </div>
-    </Link>
+    </div>
   );
 }
 
@@ -84,101 +166,45 @@ function QuoteTable({
   showVolume?: boolean;
 }) {
   const { t } = useTranslation();
+  const thirdLabel = showCap ? t("markets.marketCap") : showVolume ? t("markets.volume") : t("markets.change");
 
   return (
-    <div className="overflow-hidden rounded-xl border border-border">
-      <div
-        className={cn(
-          "grid gap-2 border-b border-border bg-secondary/30 px-3 py-2 text-[10px] font-semibold uppercase tracking-wider text-muted sm:px-4",
-          showCap || showVolume
-            ? "grid-cols-[1.4fr_0.9fr_0.8fr_72px]"
-            : "grid-cols-[1.4fr_0.9fr_0.8fr_72px]"
-        )}
-      >
+    <div className="overflow-hidden rounded-2xl border border-border/80 bg-card/40 shadow-sm backdrop-blur-sm">
+      <div className="grid grid-cols-[1.35fr_0.95fr_0.75fr_68px] gap-2 border-b border-border/70 bg-secondary/25 px-3 py-2.5 text-[10px] font-semibold uppercase tracking-[0.12em] text-muted sm:px-4">
         <span>{t("markets.symbol")}</span>
         <span className="text-right">{t("markets.priceChg")}</span>
-        <span className="text-right">
-          {showCap ? t("markets.marketCap") : showVolume ? t("markets.volume") : t("markets.change")}
-        </span>
+        <span className="text-right">{thirdLabel}</span>
         <span className="text-right">{t("markets.trend")}</span>
       </div>
-      <div>
-        {rows.map((row) => (
-          <Link
-            key={row.symbol}
-            to="/trading-room"
-            className="grid grid-cols-[1.4fr_0.9fr_0.8fr_72px] items-center gap-2 border-b border-border/50 px-3 py-2.5 last:border-0 transition-colors hover:bg-secondary/30 sm:px-4"
-          >
-            <div className="min-w-0">
-              <p className="truncate text-sm font-semibold text-foreground">{row.symbol}</p>
-              <p className="truncate text-[11px] text-muted">{row.name}</p>
-            </div>
-            <div className="text-right">
-              <p className="font-mono text-xs text-foreground sm:text-sm">{row.price}</p>
-              <p className={cn("text-[11px] font-medium", row.up ? "text-market-up" : "text-market-down")}>
-                {row.change}
+      <StaggerContainer className="divide-y divide-border/50">
+        {rows.map((row, i) => (
+          <StaggerItem key={row.symbol}>
+            <Link
+              to="/trading-room"
+              className="group relative grid grid-cols-[1.35fr_0.95fr_0.75fr_68px] items-center gap-2 px-3 py-3 transition-colors hover:bg-emerald/[0.04] sm:px-4"
+            >
+              <span className="absolute inset-y-2 left-0 w-0.5 scale-y-0 rounded-full bg-emerald transition-transform duration-300 group-hover:scale-y-100" />
+              <div className="min-w-0 pl-1">
+                <p className="truncate font-mono text-sm font-bold text-foreground">{row.symbol}</p>
+                <p className="truncate text-[11px] text-muted">{row.name}</p>
+              </div>
+              <div className="text-right">
+                <p className="font-mono text-xs font-medium text-foreground sm:text-sm">{row.price}</p>
+                <p className={cn("text-[11px] font-semibold", row.up ? "text-market-up" : "text-market-down")}>
+                  {row.change}
+                </p>
+              </div>
+              <p className="text-right font-mono text-xs text-muted sm:text-sm">
+                {showCap ? row.marketCap ?? "—" : showVolume ? row.volume ?? "—" : row.change}
               </p>
-            </div>
-            <p className="text-right font-mono text-xs text-muted sm:text-sm">
-              {showCap ? row.marketCap ?? "—" : showVolume ? row.volume ?? "—" : row.change}
-            </p>
-            <div className="justify-self-end">
-              <MiniSpark quote={row} />
-            </div>
-          </Link>
+              <div className="justify-self-end opacity-80 transition-opacity group-hover:opacity-100">
+                <MiniSpark quote={row} delay={i * 60} />
+              </div>
+            </Link>
+          </StaggerItem>
         ))}
-      </div>
+      </StaggerContainer>
     </div>
-  );
-}
-
-function TrendChips({ items }: { items: { symbol: string; name: string }[] }) {
-  return (
-    <div className="-mx-1 flex gap-2 overflow-x-auto px-1 pb-1 scrollbar-none">
-      {items.map((item) => (
-        <Link
-          key={item.symbol}
-          to="/trading-room"
-          className="inline-flex shrink-0 items-center gap-2 rounded-full border border-border bg-secondary/30 px-3 py-1.5 transition-colors hover:border-emerald/30 hover:bg-emerald/[0.06]"
-        >
-          <span className="font-mono text-xs font-semibold text-emerald">{item.symbol}</span>
-          <span className="max-w-[140px] truncate text-xs text-muted">{item.name}</span>
-        </Link>
-      ))}
-    </div>
-  );
-}
-
-function SectionBlock({
-  id,
-  title,
-  featured,
-  children,
-}: {
-  id?: string;
-  title: string;
-  featured?: MarketQuote[];
-  children: React.ReactNode;
-}) {
-  const { t } = useTranslation();
-
-  return (
-    <section id={id} className="scroll-mt-24 border-t border-border/70 pt-10 md:pt-14">
-      <div className="mb-5 flex items-end justify-between gap-4">
-        <h2 className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">{title}</h2>
-        <Link to="/trading-room" className="shrink-0 text-xs font-semibold text-emerald hover:underline md:text-sm">
-          {t("markets.launchChart")}
-        </Link>
-      </div>
-      {featured && featured.length > 0 && (
-        <div className="-mx-1 mb-6 flex gap-3 overflow-x-auto px-1 pb-1 sm:grid sm:grid-cols-3 sm:overflow-visible lg:grid-cols-6">
-          {featured.map((q) => (
-            <FeaturedCard key={q.symbol} quote={q} />
-          ))}
-        </div>
-      )}
-      {children}
-    </section>
   );
 }
 
@@ -194,47 +220,50 @@ function SubPanel({
   className?: string;
 }) {
   return (
-    <div className={cn("min-w-0", className)}>
+    <motion.div
+      initial={{ opacity: 0, y: 12 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+      className={cn("min-w-0", className)}
+    >
       <div className="mb-3 flex items-center justify-between gap-3">
-        <h3 className="text-sm font-semibold text-foreground md:text-base">{title}</h3>
+        <h3 className="font-display text-sm font-semibold tracking-tight text-foreground md:text-base">{title}</h3>
         {seeAll && (
-          <Link to="/trading-room" className="text-[11px] font-semibold text-emerald hover:underline sm:text-xs">
+          <Link
+            to="/trading-room"
+            className="inline-flex items-center gap-1 text-[11px] font-semibold text-emerald transition-colors hover:text-emerald-soft sm:text-xs"
+          >
             {seeAll}
+            <ArrowRight className="h-3.5 w-3.5" />
           </Link>
         )}
       </div>
       {children}
-    </div>
+    </motion.div>
   );
 }
 
-export function MarketSummary() {
+function TabContent({ tab }: { tab: MarketTab }) {
   const { t } = useTranslation();
 
-  return (
-    <div id="markets" className="relative scroll-mt-20 border-t border-border bg-void/40 py-12 md:py-16">
-      <Container>
-        <FadeIn className="mb-10 md:mb-12">
-          <p className="mb-3 text-xs font-semibold uppercase tracking-[0.2em] text-emerald">{t("markets.eyebrow")}</p>
-          <h1 className="font-display text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl md:text-[3.5rem]">
-            {t("markets.title")}
-          </h1>
-          <p className="mt-3 max-w-2xl text-sm text-muted md:text-base">{t("markets.subtitle")}</p>
-        </FadeIn>
-
-        {/* Indices — TradingView Markets layout */}
-        <SectionBlock title={t("markets.indices")} featured={MARKET_FEATURED_INDICES}>
+  switch (tab) {
+    case "indices":
+      return (
+        <div className="space-y-8">
+          <FeaturedStrip quotes={MARKET_FEATURED_INDICES} />
           <SubPanel title={t("markets.worldIndices")} seeAll={t("markets.seeAllIndices")}>
             <QuoteTable rows={MARKET_WORLD_INDICES} />
           </SubPanel>
-        </SectionBlock>
-
-        {/* US stocks */}
-        <SectionBlock title={t("markets.usStocks")} featured={MARKET_FEATURED_STOCKS}>
-          <SubPanel title={t("markets.communityTrends")} className="mb-8">
-            <TrendChips items={MARKET_STOCK_TRENDS} />
+        </div>
+      );
+    case "stocks":
+      return (
+        <div className="space-y-8">
+          <FeaturedStrip quotes={MARKET_FEATURED_STOCKS} />
+          <SubPanel title={t("markets.communityTrends")}>
+            <TrendMarquee items={MARKET_STOCK_TRENDS} />
           </SubPanel>
-
           <div className="grid gap-8 lg:grid-cols-2">
             <SubPanel title={t("markets.highestVolume")} seeAll={t("markets.seeAllVolume")}>
               <QuoteTable rows={MARKET_HIGH_VOLUME} showVolume />
@@ -248,10 +277,12 @@ export function MarketSummary() {
               </SubPanel>
             </div>
           </div>
-        </SectionBlock>
-
-        {/* Crypto */}
-        <SectionBlock title={t("markets.crypto")} featured={MARKET_FEATURED_CRYPTO}>
+        </div>
+      );
+    case "crypto":
+      return (
+        <div className="space-y-8">
+          <FeaturedStrip quotes={MARKET_FEATURED_CRYPTO} />
           <div className="grid gap-8 lg:grid-cols-2">
             <SubPanel title={t("markets.cryptoRanking")} seeAll={t("markets.seeAllCoins")}>
               <QuoteTable rows={MARKET_CRYPTO_RANKING} showCap />
@@ -265,10 +296,12 @@ export function MarketSummary() {
               </SubPanel>
             </div>
           </div>
-        </SectionBlock>
-
-        {/* Futures */}
-        <SectionBlock title={t("markets.futures")} featured={MARKET_FEATURED_FUTURES}>
+        </div>
+      );
+    case "futures":
+      return (
+        <div className="space-y-8">
+          <FeaturedStrip quotes={MARKET_FEATURED_FUTURES} />
           <div className="grid gap-8 lg:grid-cols-2">
             <SubPanel title={t("markets.energy")} seeAll={t("markets.seeAllEnergy")}>
               <QuoteTable rows={MARKET_ENERGY} />
@@ -277,25 +310,125 @@ export function MarketSummary() {
               <QuoteTable rows={MARKET_METALS_FUTURES} />
             </SubPanel>
           </div>
-        </SectionBlock>
-
-        {/* Forex */}
-        <SectionBlock title={t("markets.forex")} featured={MARKET_FEATURED_FOREX}>
+        </div>
+      );
+    case "forex":
+      return (
+        <div className="space-y-8">
+          <FeaturedStrip quotes={MARKET_FEATURED_FOREX} />
           <SubPanel title={t("markets.majors")} seeAll={t("markets.seeAllForex")}>
             <QuoteTable rows={MARKET_FOREX_MAJORS} />
           </SubPanel>
-          <div className="mt-5 flex flex-wrap gap-4 text-sm">
-            <Link to="/world-economy" className="font-semibold text-emerald hover:underline">
-              {t("markets.worldEconomy")}
-            </Link>
-            <Link to="/forex-news" className="font-semibold text-emerald hover:underline">
-              {t("markets.forexNews")}
-            </Link>
-            <Link to="/world-economy/trends" className="font-semibold text-muted hover:text-emerald hover:underline">
-              {t("markets.globalTrends")}
+          <motion.div
+            initial={{ opacity: 0 }}
+            whileInView={{ opacity: 1 }}
+            viewport={{ once: true }}
+            className="flex flex-wrap gap-3"
+          >
+            {[
+              { href: "/world-economy", label: t("markets.worldEconomy"), accent: true },
+              { href: "/forex-news", label: t("markets.forexNews"), accent: true },
+              { href: "/world-economy/trends", label: t("markets.globalTrends"), accent: false },
+            ].map((link) => (
+              <Link
+                key={link.href}
+                to={link.href}
+                className={cn(
+                  "inline-flex items-center gap-1.5 rounded-full border px-4 py-2 text-sm font-semibold transition-all duration-300",
+                  link.accent
+                    ? "border-emerald/25 bg-emerald/[0.06] text-emerald hover:border-emerald/40 hover:bg-emerald/10"
+                    : "border-border text-muted hover:border-border hover:bg-secondary/40 hover:text-foreground"
+                )}
+              >
+                {link.label}
+                <ArrowRight className="h-3.5 w-3.5 opacity-70" />
+              </Link>
+            ))}
+          </motion.div>
+        </div>
+      );
+    default:
+      return null;
+  }
+}
+
+export function MarketSummary() {
+  const { t } = useTranslation();
+  const [activeTab, setActiveTab] = useState<MarketTab>("stocks");
+
+  const tabLabels: Record<MarketTab, string> = {
+    indices: t("markets.indices"),
+    stocks: t("markets.usStocks"),
+    crypto: t("markets.crypto"),
+    futures: t("markets.futures"),
+    forex: t("markets.forex"),
+  };
+
+  return (
+    <div id="markets" className="relative scroll-mt-20 overflow-hidden border-t border-border py-14 md:py-20">
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(16,185,129,0.08),transparent_55%)]" />
+      <div className="pointer-events-none absolute inset-0 grid-pattern opacity-20" />
+
+      <Container className="relative">
+        <FadeIn className="mb-10 md:mb-12">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <div className="mb-3 flex flex-wrap items-center gap-3">
+                <p className="text-xs font-semibold uppercase tracking-[0.2em] text-emerald">{t("markets.eyebrow")}</p>
+                <LiveBadge />
+              </div>
+              <h2 className="font-display text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl md:text-5xl">
+                {t("markets.title")}
+              </h2>
+              <p className="mt-3 max-w-2xl text-sm leading-relaxed text-muted md:text-base">{t("markets.subtitle")}</p>
+            </div>
+            <Link
+              to="/trading-room"
+              className="inline-flex shrink-0 items-center gap-2 rounded-full border border-emerald/30 bg-emerald/[0.08] px-5 py-2.5 text-sm font-semibold text-emerald transition-all hover:border-emerald/50 hover:bg-emerald/15 hover:shadow-[0_0_24px_rgba(16,185,129,0.15)]"
+            >
+              {t("markets.launchChart")}
+              <ArrowRight className="h-4 w-4" />
             </Link>
           </div>
-        </SectionBlock>
+        </FadeIn>
+
+        <FadeIn delay={0.08} className="mb-8">
+          <div className="flex gap-1 overflow-x-auto rounded-2xl border border-border/70 bg-secondary/25 p-1.5 scrollbar-none backdrop-blur-sm">
+            {TAB_IDS.map((id) => (
+              <button
+                key={id}
+                type="button"
+                onClick={() => setActiveTab(id)}
+                className={cn(
+                  "relative shrink-0 rounded-xl px-4 py-2.5 text-sm font-semibold transition-colors duration-300 sm:px-5",
+                  activeTab === id ? "text-foreground" : "text-muted hover:text-foreground"
+                )}
+              >
+                {activeTab === id && (
+                  <motion.span
+                    layoutId="market-tab-pill"
+                    className="absolute inset-0 rounded-xl border border-emerald/20 bg-card shadow-sm"
+                    transition={{ type: "spring", stiffness: 380, damping: 32 }}
+                  />
+                )}
+                <span className="relative z-[1]">{tabLabels[id]}</span>
+              </button>
+            ))}
+          </div>
+        </FadeIn>
+
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            variants={tabTransition}
+            initial="initial"
+            animate="animate"
+            exit="exit"
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <TabContent tab={activeTab} />
+          </motion.div>
+        </AnimatePresence>
       </Container>
     </div>
   );
