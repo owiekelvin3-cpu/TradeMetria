@@ -30,8 +30,8 @@ export function AnimatedBackground() {
         className="absolute inset-0"
         style={{
           background: isLight
-            ? "radial-gradient(ellipse 100% 80% at 50% 100%, rgba(255,255,255,0.9), transparent 70%)"
-            : "radial-gradient(ellipse 100% 80% at 50% 100%, rgba(0,0,0,0.8), transparent 70%)",
+            ? "radial-gradient(ellipse 100% 80% at 50% 100%, rgba(241,245,249,0.9), transparent 70%)"
+            : "radial-gradient(ellipse 100% 80% at 50% 100%, rgba(9,9,11,0.8), transparent 70%)",
         }}
       />
     </div>

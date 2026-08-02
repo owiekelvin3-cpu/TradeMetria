@@ -17,7 +17,7 @@ export function applyTheme(theme: Theme) {
   root.style.colorScheme = theme;
 
   const meta = document.querySelector('meta[name="theme-color"]');
-  meta?.setAttribute("content", theme === "light" ? "#FFFFFF" : "#000000");
+  meta?.setAttribute("content", theme === "light" ? "#FAFAFA" : "#09090B");
 
   try {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
