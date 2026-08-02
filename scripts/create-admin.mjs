@@ -94,19 +94,15 @@ async function main() {
 
   const { error: profileError } = await supabase
     .from("profiles")
-    .update({ role: "admin", full_name: ADMIN_NAME, email: ADMIN_EMAIL })
+    .update({ full_name: ADMIN_NAME, email: ADMIN_EMAIL })
     .eq("id", created.user.id);
 
-  if (profileError) {
-    // Profile row may be created by trigger; try upsert
-    const { error: upsertError } = await supabase.from("profiles").upsert({
-      id: created.user.id,
-      email: ADMIN_EMAIL,
-      full_name: ADMIN_NAME,
-      role: "admin",
-    });
-    if (upsertError) throw upsertError;
-  }
+  if (profileError) throw profileError;
+
+  console.warn(
+    "User created. Promote to admin in Supabase SQL:\n" +
+      `  SELECT public.operator_set_user_role('${created.user.id}'::uuid, 'admin');`
+  );
 
   console.log("\nAdmin created successfully.\n");
   console.log("Login at: http://localhost:5173/admin-auth");

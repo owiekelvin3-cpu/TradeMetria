@@ -9,11 +9,10 @@ import {
   buildPageList,
   COMMUNITY_PAGE_SIZE,
   fetchCommunityArticles,
-  formatArticleTime,
   type CommunityIdea,
   type CommunityTopic,
-  type IdeaBias,
 } from "@/lib/community-feed";
+import { CommunityIdeaCard } from "@/components/marketing/CommunityIdeaCard";
 import { ArrowLeft, ArrowRight, RefreshCw } from "@/lib/icons";
 import { cn } from "@/lib/utils";
 
@@ -21,103 +20,6 @@ type Tab = "popular" | "editors";
 type Sort = "recent" | "popular";
 
 const FILTERS: CommunityTopic[] = ["all", "crypto", "finance", "markets"];
-
-function BiasBadge({ bias }: { bias: IdeaBias }) {
-  const { t } = useTranslation();
-  if (bias === "neutral") return null;
-  if (bias === "education") {
-    return (
-      <span className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide bg-secondary text-muted">
-        {t("pages.ideasEducation")}
-      </span>
-    );
-  }
-  return (
-    <span
-      className={cn(
-        "rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wide",
-        bias === "long" && "bg-emerald/15 text-market-up",
-        bias === "short" && "bg-red-500/15 text-market-down"
-      )}
-    >
-      {t(`insights.bias.${bias}`)}
-    </span>
-  );
-}
-
-function IdeaCard({ idea }: { idea: CommunityIdea }) {
-  const { t, i18n } = useTranslation();
-  const biasLabel =
-    idea.bias === "long" ? "long" : idea.bias === "short" ? "short" : idea.bias === "education" ? "education" : null;
-
-  if (!idea.image) return null;
-
-  return (
-    <a
-      href={idea.url}
-      target="_blank"
-      rel="noopener noreferrer"
-      className="group flex h-full flex-col overflow-hidden rounded-xl border border-border bg-void/20 transition-colors hover:border-emerald/35"
-    >
-      <div className="relative aspect-[16/10] overflow-hidden bg-secondary/50">
-        <img
-          src={idea.image}
-          alt=""
-          loading="lazy"
-          referrerPolicy="no-referrer"
-          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-        />
-        <div className="pointer-events-none absolute inset-x-0 bottom-0 flex items-end justify-between gap-2 bg-gradient-to-t from-black/70 via-black/25 to-transparent p-3">
-          <span className="rounded bg-black/55 px-2 py-0.5 font-mono text-[11px] font-semibold text-white backdrop-blur-sm">
-            {idea.symbol}
-          </span>
-          {biasLabel && biasLabel !== "education" ? (
-            <span
-              className={cn(
-                "rounded px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white",
-                biasLabel === "long" ? "bg-emerald/80" : "bg-red-500/80"
-              )}
-            >
-              {t(`insights.bias.${biasLabel}`)}
-            </span>
-          ) : biasLabel === "education" ? (
-            <span className="rounded bg-white/20 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-white backdrop-blur-sm">
-              {t("pages.ideasEducation")}
-            </span>
-          ) : null}
-        </div>
-      </div>
-
-      <div className="flex flex-1 flex-col p-4">
-        <h3 className="line-clamp-2 font-display text-[15px] font-semibold leading-snug text-foreground group-hover:text-emerald">
-          {idea.title}
-        </h3>
-        {idea.summary ? (
-          <p className="mt-2 line-clamp-3 flex-1 text-sm leading-relaxed text-muted">{idea.summary}</p>
-        ) : (
-          <div className="flex-1" />
-        )}
-
-        <div className="mt-4 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-muted">
-          <BiasBadge bias={idea.bias} />
-          <span>
-            {t("insights.by")}{" "}
-            <span className="font-medium text-foreground/80">{idea.handle}</span>
-          </span>
-          {idea.updated ? (
-            <span className="rounded bg-secondary px-1.5 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-emerald">
-              {t("pages.ideasUpdated")}
-            </span>
-          ) : null}
-          <span className="ml-auto font-mono text-[11px]">
-            {formatArticleTime(idea.publishedAt, i18n.language)}
-          </span>
-        </div>
-        <p className="mt-1 text-[11px] text-muted/80">{idea.source}</p>
-      </div>
-    </a>
-  );
-}
 
 function IdeasPagination({
   page,
@@ -380,7 +282,7 @@ export default function ReviewsPage() {
           <FadeIn>
             <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
               {pageItems.map((idea) => (
-                <IdeaCard key={idea.id} idea={idea} />
+                <CommunityIdeaCard key={idea.id} idea={idea} />
               ))}
             </div>
             {visible.length === 0 ? (

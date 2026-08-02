@@ -102,7 +102,19 @@
     "mockHigh": "High",
     "mockVol": "Volume",
     "videoLabel": "{{brand}} platform",
-    "videoAlt": "Product walkthrough of the trading platform interface"
+    "videoAlt": "Product walkthrough of the trading platform interface",
+    "trustCustody": "Segregated client custody",
+    "trustRegulation": "Reg. {{id}}",
+    "trustDesk": "24/7 professional desk"
+  },
+  "homeCommunity": {
+    "eyebrow": "Community intelligence",
+    "title": "Latest news from the community desk",
+    "subtitle": "Live headlines from established publishers — curated on {{brand}} so you can scan macro, crypto, and market moves in one place.",
+    "sourcesLabel": "Trusted sources",
+    "viewAll": "View all in Community",
+    "ctaTitle": "Explore the full community feed",
+    "ctaSub": "Filter by topic, sort by recency, and open hundreds of daily stories from the Community page."
   },
   "markets": {
     "eyebrow": "Markets",

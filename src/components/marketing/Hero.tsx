@@ -124,6 +124,23 @@ export function Hero() {
           </motion.p>
 
           <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.24 }}
+            className="mx-auto mt-5 flex max-w-2xl flex-wrap items-center justify-center gap-2 text-xs text-zinc-300/90"
+          >
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-sm">
+              {t("hero.trustCustody")}
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-sm">
+              {t("hero.trustRegulation", { id: BRAND.registrationNumber })}
+            </span>
+            <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 backdrop-blur-sm">
+              {t("hero.trustDesk")}
+            </span>
+          </motion.div>
+
+          <motion.div
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.3 }}
@@ -135,7 +152,7 @@ export function Hero() {
               </Link>
             </Button>
             <Button variant="outline" size="lg" asChild className="w-full sm:w-auto">
-              <a href="#markets">{t("hero.exploreMarkets")}</a>
+              <Link to="/community">{t("homeCommunity.viewAll")}</Link>
             </Button>
           </motion.div>
         </div>
