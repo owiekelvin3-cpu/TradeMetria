@@ -8,12 +8,10 @@ import { usePortfolio } from "@/hooks/usePortfolio";
 import { PageHeader } from "@/components/ui/page-header";
 import { Button } from "@/components/ui/button";
 import { DashboardSheet } from "@/components/dashboard/DashboardSheet";
-import { PortfolioRequirementPanel } from "@/components/dashboard/WithdrawalUi";
+import { PortfolioRequirementTracker } from "@/components/dashboard/PortfolioRequirementTracker";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
-import {
-  portfolioProgressPercent,
-  isPortfolioRequirementBlocking,
-} from "@/lib/portfolio-requirement";
+import { setActiveCurrency } from "@/lib/currency";
+import { DEFAULT_CURRENCY } from "@/constants/currencies";
 import { cn, formatCurrency, formatDate } from "@/lib/utils";
 import {
   ArrowDownToLine,
@@ -139,16 +137,19 @@ function AllocationBar({
 
 export default function PortfolioPage() {
   const { t } = useTranslation();
-  const { user } = useAuth();
-  const { data, allocation, loading, refreshing, error, load } = usePortfolio(user?.id);
+  const { user, profile, loading: authLoading } = useAuth();
+  const authReady = !authLoading && !!user?.id;
+  const { data, allocation, loading, refreshing, error, load } = usePortfolio(user?.id, authReady);
+  const accountCurrency = profile?.preferred_currency ?? DEFAULT_CURRENCY;
+  const pageLoading = authLoading || loading;
+  const money = (amount: number) => formatCurrency(amount, accountCurrency);
 
   useEffect(() => {
-    void load();
-  }, [load]);
+    setActiveCurrency(accountCurrency);
+  }, [accountCurrency]);
 
   const portfolioStatus = data?.portfolioStatus;
-  const requirementBlocking = portfolioStatus ? isPortfolioRequirementBlocking(portfolioStatus) : false;
-  const requirementProgress = portfolioStatus ? portfolioProgressPercent(portfolioStatus) : 100;
+  const requirementActive = Boolean(portfolioStatus?.enabled && !portfolioStatus.waived);
 
   return (
     <div className="space-y-5 sm:space-y-6">
@@ -173,7 +174,26 @@ export default function PortfolioPage() {
       {error && (
         <div className="rounded-2xl border border-red-500/25 bg-red-500/10 px-4 py-3 text-sm text-red-400">
           {error}
+          <Button
+            variant="outline"
+            size="sm"
+            className="ml-3 inline-flex"
+            disabled={refreshing}
+            onClick={() => void load(true)}
+          >
+            {t("portfolio.refresh")}
+          </Button>
         </div>
+      )}
+
+      {!pageLoading && requirementActive && portfolioStatus && (
+        <FadeIn>
+          <PortfolioRequirementTracker
+            status={portfolioStatus}
+            pendingDeposits={data?.pendingDeposits ?? 0}
+            formatAmount={money}
+          />
+        </FadeIn>
       )}
 
       <FadeIn>
@@ -193,7 +213,7 @@ export default function PortfolioPage() {
                 </span>
               </div>
 
-              {loading ? (
+              {pageLoading ? (
                 <div className="mt-4 h-14 w-56 animate-pulse rounded-2xl bg-white/10" />
               ) : (
                 <motion.p
@@ -202,7 +222,7 @@ export default function PortfolioPage() {
                   animate={{ opacity: 1, y: 0 }}
                   className="mt-3 font-display text-4xl font-semibold tracking-tight text-white sm:text-5xl"
                 >
-                  {formatCurrency(data?.balance ?? 0)}
+                  {money(data?.balance ?? 0)}
                 </motion.p>
               )}
 
@@ -223,7 +243,7 @@ export default function PortfolioPage() {
             </div>
 
             <div className="h-[140px] min-h-[120px] rounded-2xl border border-white/10 bg-black/20 p-2 sm:h-[160px]">
-              {loading ? (
+              {pageLoading ? (
                 <div className="h-full animate-pulse rounded-xl bg-white/5" />
               ) : (
                 <ResponsiveContainer width="100%" height="100%">
@@ -243,7 +263,7 @@ export default function PortfolioPage() {
                         borderRadius: 12,
                         fontSize: 12,
                       }}
-                      formatter={(v) => [formatCurrency(Number(v ?? 0)), t("portfolio.value")]}
+                      formatter={(v) => [money(Number(v ?? 0)), t("portfolio.value")]}
                     />
                     <Area
                       type="monotone"
@@ -265,7 +285,7 @@ export default function PortfolioPage() {
       <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         <AnimatedMetric
           label={t("portfolio.totalDeposits")}
-          value={formatCurrency(data?.totalDeposits ?? 0)}
+          value={money(data?.totalDeposits ?? 0)}
           sub={t("portfolio.settledOnly")}
           icon={ArrowDownToLine}
           href="/dashboard/deposits"
@@ -274,7 +294,7 @@ export default function PortfolioPage() {
         />
         <AnimatedMetric
           label={t("portfolio.tradingProfit")}
-          value={formatCurrency(data?.tradingProfit ?? 0)}
+          value={money(data?.tradingProfit ?? 0)}
           sub={
             data && data.netContributions > 0
               ? t("portfolio.profitPct", { pct: data.profitPercent.toFixed(1) })
@@ -287,7 +307,7 @@ export default function PortfolioPage() {
         />
         <AnimatedMetric
           label={t("portfolio.totalWithdrawals")}
-          value={formatCurrency(data?.totalWithdrawals ?? 0)}
+          value={money(data?.totalWithdrawals ?? 0)}
           icon={ArrowUpFromLine}
           href="/dashboard/withdrawals"
           accent="gold"
@@ -307,46 +327,6 @@ export default function PortfolioPage() {
         />
       </div>
 
-      {portfolioStatus?.enabled && (
-        <FadeIn delay={0.1}>
-          <div className="grid gap-4 lg:grid-cols-[1fr_minmax(240px,280px)]">
-            <PortfolioRequirementPanel status={portfolioStatus} />
-            <div className="flex flex-col items-center justify-center rounded-2xl border border-border/70 bg-card/50 p-6">
-              <div className="relative h-32 w-32">
-                <svg className="h-full w-full -rotate-90" viewBox="0 0 120 120">
-                  <circle cx="60" cy="60" r="52" fill="none" stroke="currentColor" strokeWidth="10" className="text-secondary/80" />
-                  <motion.circle
-                    cx="60"
-                    cy="60"
-                    r="52"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="10"
-                    strokeLinecap="round"
-                    className={requirementBlocking ? "text-sky-400" : "text-emerald"}
-                    strokeDasharray={326.7}
-                    initial={{ strokeDashoffset: 326.7 }}
-                    animate={{ strokeDashoffset: 326.7 - (326.7 * requirementProgress) / 100 }}
-                    transition={{ duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
-                  />
-                </svg>
-                <div className="absolute inset-0 flex flex-col items-center justify-center text-center">
-                  <span className="font-display text-2xl font-bold text-foreground">{requirementProgress}%</span>
-                  <span className="text-[10px] uppercase tracking-wider text-muted">{t("portfolio.requirement")}</span>
-                </div>
-              </div>
-              <p className="mt-4 text-center text-xs leading-relaxed text-muted">
-                {requirementBlocking
-                  ? t("portfolio.requirementPending", {
-                      amount: formatCurrency(portfolioStatus.remaining),
-                    })
-                  : t("portfolio.requirementMet")}
-              </p>
-            </div>
-          </div>
-        </FadeIn>
-      )}
-
       <AllocationBar depositShare={allocation.depositShare} profitShare={allocation.profitShare} />
 
       <DashboardSheet>
@@ -361,7 +341,7 @@ export default function PortfolioPage() {
             </Link>
           </div>
 
-          {loading ? (
+          {pageLoading ? (
             <div className="space-y-2">
               {[1, 2, 3].map((i) => (
                 <div key={i} className="h-14 animate-pulse rounded-xl bg-secondary/40" />
@@ -387,7 +367,7 @@ export default function PortfolioPage() {
                     </div>
                     <div className="text-right">
                       <p className="font-mono text-sm font-semibold text-foreground">
-                        {formatCurrency(Number(dep.amount))}
+                        {money(Number(dep.amount))}
                       </p>
                       <p
                         className={cn(
@@ -399,7 +379,11 @@ export default function PortfolioPage() {
                               : "text-muted"
                         )}
                       >
-                        {dep.status}
+                        {dep.status === "completed" || dep.status === "approved"
+                          ? t("portfolio.countsTowardRequirement")
+                          : dep.status === "pending"
+                            ? t("portfolio.pendingNotCounted")
+                            : dep.status}
                       </p>
                     </div>
                   </div>

@@ -92,17 +92,17 @@ export function AdminLayout() {
   }, [sidebarOpen]);
 
   return (
-    <div className="relative flex min-h-dvh w-full max-w-[100vw] overflow-x-hidden bg-background">
+    <div className="relative flex h-dvh max-h-dvh w-full max-w-[100vw] overflow-hidden bg-background">
       <div className="admin-atmosphere" aria-hidden="true" />
 
       <aside
         className={cn(
-          "admin-sidebar fixed inset-y-0 left-0 z-40 flex w-[min(19rem,90vw)] flex-col border-r border-border transition-transform duration-300 ease-out lg:static lg:w-64 lg:translate-x-0",
-          sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"
+          "admin-sidebar fixed inset-y-0 left-0 z-50 flex h-dvh max-h-dvh w-[min(19rem,90vw)] min-h-0 flex-col border-r border-border transition-transform duration-300 ease-out lg:relative lg:z-auto lg:w-60 lg:shrink-0 lg:translate-x-0 xl:w-64",
+          sidebarOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:shadow-none"
         )}
         aria-label={t("admin.navLabel")}
       >
-        <div className="flex items-center justify-between gap-2 border-b border-border/80 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))]">
+        <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border/80 px-4 py-4 pt-[max(1rem,env(safe-area-inset-top))]">
           <Link to="/dashboard/admin" className="flex min-w-0 items-center gap-2.5" onClick={() => setSidebarOpen(false)}>
             <Logo size="sm" wordmarkClassName="text-sm" />
             <span className="rounded-full bg-gold/15 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.14em] text-gold ring-1 ring-gold/25">
@@ -119,7 +119,7 @@ export function AdminLayout() {
           </button>
         </div>
 
-        <nav className="flex-1 space-y-1 overflow-y-auto overscroll-contain p-3 [-webkit-overflow-scrolling:touch]">
+        <nav className="min-h-0 flex-1 space-y-1 overflow-y-auto overscroll-contain p-3 [-webkit-overflow-scrolling:touch]">
           <p className="mb-2 px-3 text-[10px] font-semibold uppercase tracking-[0.2em] text-gold/80">
             {t("admin.title")}
           </p>
@@ -144,7 +144,7 @@ export function AdminLayout() {
           })}
         </nav>
 
-        <div className="border-t border-border/80 p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
+        <div className="shrink-0 border-t border-border/80 bg-inherit p-3 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
           <Link
             to="/dashboard"
             onClick={() => setSidebarOpen(false)}
@@ -172,14 +172,14 @@ export function AdminLayout() {
       {sidebarOpen && (
         <button
           type="button"
-          className="fixed inset-0 z-30 bg-black/65 backdrop-blur-sm lg:hidden"
+          className="fixed inset-0 z-[45] bg-black/65 backdrop-blur-sm lg:hidden"
           onClick={() => setSidebarOpen(false)}
           aria-label={t("dashboard.closeSidebar")}
         />
       )}
 
-      <div className="relative z-[1] flex min-w-0 w-full flex-1 flex-col">
-        <header className="sticky top-0 z-20 flex min-h-14 items-center gap-2 border-b border-border/80 bg-background/80 px-3 pt-[env(safe-area-inset-top)] backdrop-blur-xl sm:gap-3 sm:px-4 md:px-6">
+      <div className="relative z-[1] flex min-h-0 min-w-0 w-full flex-1 flex-col overflow-hidden">
+        <header className="sticky top-0 z-20 flex min-h-14 shrink-0 items-center gap-2 border-b border-border/80 bg-background/80 px-3 pt-[env(safe-area-inset-top)] backdrop-blur-xl sm:gap-3 sm:px-4 md:px-6">
           <button
             type="button"
             className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl text-muted hover:bg-secondary lg:hidden"
@@ -199,7 +199,7 @@ export function AdminLayout() {
           </div>
         </header>
 
-        <main className="min-w-0 flex-1 overflow-x-hidden p-3 pb-[calc(4.75rem+env(safe-area-inset-bottom))] sm:p-4 md:p-6 lg:p-8 lg:pb-8">
+        <main className="min-h-0 min-w-0 flex-1 overflow-x-hidden overflow-y-auto p-3 pb-[calc(4.75rem+env(safe-area-inset-bottom))] sm:p-4 md:p-6 lg:p-8 lg:pb-8">
           <div className="admin-shell">
             <PageEnter key={location.pathname}>
               <Outlet />

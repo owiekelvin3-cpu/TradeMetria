@@ -1,9 +1,12 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { supabase } from "@/lib/supabase";
-import { ensureValidSession } from "@/lib/auth-session";
+import { formatAuthError, getErrorMessage, withValidSession } from "@/lib/auth-session";
 import { fetchUserTransactions, type UserTransaction } from "@/lib/transactions";
 import {
+  defaultWithdrawalEligibility,
+  fetchPortfolioStatusForUser,
   fetchWithdrawalEligibility,
+  syncPortfolioStatusWithDeposits,
   type PortfolioRequirementStatus,
   type WithdrawalEligibility,
 } from "@/lib/portfolio-requirement";
@@ -36,35 +39,46 @@ export interface PortfolioSnapshot {
   portfolioStatus: PortfolioRequirementStatus | null;
 }
 
-export function usePortfolio(userId: string | undefined) {
+const PORTFOLIO_LOAD_ERROR = "We couldn't load your portfolio. Please try again.";
+
+export function usePortfolio(userId: string | undefined, authReady = true) {
   const [data, setData] = useState<PortfolioSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState("");
 
   const load = useCallback(async (soft = false) => {
-    if (!userId) return;
+    if (!authReady || !userId) return;
     if (soft) setRefreshing(true);
     else setLoading(true);
     setError("");
 
     try {
-      await ensureValidSession();
-      const [balRes, depRes, txList, tradesRes, aiRes, eligibility] = await Promise.all([
-        supabase.from("balances").select("amount").eq("user_id", userId).single(),
-        supabase.from("deposits").select("*").eq("user_id", userId).order("created_at", { ascending: true }),
-        fetchUserTransactions(userId),
-        supabase.from("trades").select("id, status").eq("user_id", userId),
-        supabase.from("ai_trading_subscriptions").select("id, status").eq("user_id", userId),
-        fetchWithdrawalEligibility(),
-      ]);
+      const [balRes, depRes, txList, tradesRes, aiRes] = await withValidSession(() =>
+        Promise.all([
+          supabase.from("balances").select("amount").eq("user_id", userId).maybeSingle(),
+          supabase.from("deposits").select("*").eq("user_id", userId).order("created_at", { ascending: true }),
+          fetchUserTransactions(userId).catch(() => [] as UserTransaction[]),
+          supabase.from("trades").select("id, status").eq("user_id", userId),
+          supabase.from("ai_trading_subscriptions").select("id, status").eq("user_id", userId),
+        ])
+      );
 
-      if (balRes.error && balRes.error.code !== "PGRST116") throw balRes.error;
-      if (depRes.error) throw depRes.error;
+      const loadErrors: string[] = [];
+      if (balRes.error) {
+        loadErrors.push(formatAuthError(balRes.error, PORTFOLIO_LOAD_ERROR));
+      }
+      if (depRes.error) {
+        loadErrors.push(formatAuthError(depRes.error, PORTFOLIO_LOAD_ERROR));
+      }
 
       const balance = Number(balRes.data?.amount ?? 0);
       const deposits = depRes.data ?? [];
       const transactions = txList;
+
+      if (loadErrors.length === 2) {
+        throw new Error(loadErrors[0] || PORTFOLIO_LOAD_ERROR);
+      }
 
       const totalDeposits = deposits
         .filter((d) => isSettled(d.status))
@@ -77,6 +91,28 @@ export function usePortfolio(userId: string | undefined) {
       const pendingDeposits = deposits
         .filter((d) => d.status === "pending")
         .reduce((sum, d) => sum + Number(d.amount), 0);
+
+      let eligibility: WithdrawalEligibility = defaultWithdrawalEligibility;
+      try {
+        eligibility = await fetchWithdrawalEligibility();
+      } catch {
+        try {
+          const portfolio = await fetchPortfolioStatusForUser(userId, totalDeposits);
+          eligibility = {
+            portfolio,
+            pending_fees_count: 0,
+            can_withdraw: portfolio.can_withdraw,
+          };
+        } catch {
+          eligibility = {
+            ...defaultWithdrawalEligibility,
+            portfolio: {
+              ...defaultWithdrawalEligibility.portfolio,
+              deposit_total: totalDeposits,
+            },
+          };
+        }
+      }
 
       const netContributions = totalDeposits - totalWithdrawals;
       const tradingProfit = balance - netContributions;
@@ -139,15 +175,66 @@ export function usePortfolio(userId: string | undefined) {
         deposits,
         transactions,
         eligibility,
-        portfolioStatus: eligibility.portfolio,
+        portfolioStatus: syncPortfolioStatusWithDeposits(eligibility.portfolio, totalDeposits),
       });
+      setError(loadErrors[0] ?? "");
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Failed to load portfolio");
+      const message = getErrorMessage(err).trim();
+      setError(message || PORTFOLIO_LOAD_ERROR);
+      setData(null);
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [userId]);
+  }, [authReady, userId]);
+
+  useEffect(() => {
+    if (!authReady) {
+      setLoading(true);
+      return;
+    }
+    if (!userId) {
+      setLoading(false);
+      setData(null);
+      return;
+    }
+    void load();
+  }, [authReady, userId, load]);
+
+  useEffect(() => {
+    if (!authReady || !userId) return;
+    const onVisible = () => {
+      if (document.visibilityState === "visible") void load(true);
+    };
+    document.addEventListener("visibilitychange", onVisible);
+    return () => document.removeEventListener("visibilitychange", onVisible);
+  }, [authReady, userId, load]);
+
+  useEffect(() => {
+    if (!authReady || !userId) return;
+
+    const channel = supabase
+      .channel(`portfolio-${userId}`)
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "deposits", filter: `user_id=eq.${userId}` },
+        () => {
+          void load(true);
+        }
+      )
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "balances", filter: `user_id=eq.${userId}` },
+        () => {
+          void load(true);
+        }
+      )
+      .subscribe();
+
+    return () => {
+      void supabase.removeChannel(channel);
+    };
+  }, [authReady, userId, load]);
 
   const allocation = useMemo(() => {
     if (!data || data.balance <= 0) {

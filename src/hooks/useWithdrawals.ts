@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabase";
 import { ensureValidSession } from "@/lib/auth-session";
 import { fetchOutstandingFees, sumOutstandingFees } from "@/lib/fees";
 import {
+  defaultWithdrawalEligibility,
   fetchWithdrawalEligibility,
   isPortfolioRequirementBlocking,
   type PortfolioRequirementStatus,
@@ -20,16 +21,7 @@ function matchesFilter(method: string, filter?: WithdrawalFilter) {
   return method === filter;
 }
 
-const defaultPortfolioStatus: PortfolioRequirementStatus = {
-  enabled: false,
-  waived: false,
-  source: "none",
-  requirement: 0,
-  deposit_total: 0,
-  remaining: 0,
-  currency: "USD",
-  can_withdraw: true,
-};
+const defaultPortfolioStatus: PortfolioRequirementStatus = defaultWithdrawalEligibility.portfolio;
 
 export function useWithdrawalData(filter?: WithdrawalFilter) {
   const [withdrawals, setWithdrawals] = useState<Withdrawal[]>([]);
@@ -43,7 +35,7 @@ export function useWithdrawalData(filter?: WithdrawalFilter) {
       supabase.from("withdrawals").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10),
       supabase.from("balances").select("amount").eq("user_id", userId).single(),
       fetchOutstandingFees(userId).catch(() => [] as UserFee[]),
-      fetchWithdrawalEligibility(),
+      fetchWithdrawalEligibility().catch(() => defaultWithdrawalEligibility),
     ]);
     const all = wRes.data ?? [];
     setWithdrawals(filter ? all.filter((w) => matchesFilter(w.method, filter)) : all);

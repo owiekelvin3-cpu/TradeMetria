@@ -11,7 +11,7 @@ const REFRESH_SKEW_SECONDS = 180;
 
 let refreshInFlight: Promise<boolean> | null = null;
 
-function errorText(error: unknown): string {
+export function getErrorMessage(error: unknown): string {
   if (!error) return "";
   if (typeof error === "string") return error;
   if (error instanceof Error) return error.message;
@@ -30,7 +30,7 @@ function errorText(error: unknown): string {
 }
 
 export function isJwtExpiredError(error: unknown): boolean {
-  return JWT_EXPIRED_RE.test(errorText(error));
+  return JWT_EXPIRED_RE.test(getErrorMessage(error));
 }
 
 /** User-friendly message — never show raw JWT / exp claim text in the UI. */
@@ -40,7 +40,7 @@ export function formatAuthError(
 ): string {
   if (!error) return fallback;
   if (isJwtExpiredError(error)) return fallback;
-  const text = errorText(error).trim();
+  const text = getErrorMessage(error).trim();
   return text || fallback;
 }
 
@@ -111,6 +111,20 @@ function hasSupabaseError(result: unknown): result is { error: unknown } {
   return !!result && typeof result === "object" && "error" in result && !!(result as { error: unknown }).error;
 }
 
+function findJwtExpiredError(result: unknown): unknown | null {
+  if (Array.isArray(result)) {
+    for (const item of result) {
+      const nested = findJwtExpiredError(item);
+      if (nested) return nested;
+    }
+    return null;
+  }
+  if (hasSupabaseError(result) && isJwtExpiredError(result.error)) {
+    return result.error;
+  }
+  return null;
+}
+
 /** Call before API requests; refreshes and retries once when the JWT is stale. */
 export async function withValidSession<T>(fn: () => Promise<T>): Promise<T> {
   const ok = await ensureValidSession();
@@ -119,11 +133,18 @@ export async function withValidSession<T>(fn: () => Promise<T>): Promise<T> {
     throw new Error("Session expired");
   }
 
-  const result = await fn();
+  let result = await fn();
+  let jwtError = findJwtExpiredError(result);
 
-  if (hasSupabaseError(result) && isJwtExpiredError(result.error)) {
+  if (jwtError) {
     const refreshed = await forceRefreshSession();
-    if (refreshed) return fn();
+    if (refreshed) {
+      result = await fn();
+      jwtError = findJwtExpiredError(result);
+    }
+  }
+
+  if (jwtError) {
     notifySessionExpired();
     throw new Error("Session expired");
   }

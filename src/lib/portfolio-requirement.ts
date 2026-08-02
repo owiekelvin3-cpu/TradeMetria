@@ -19,6 +19,21 @@ export interface WithdrawalEligibility {
   can_withdraw: boolean;
 }
 
+export const defaultWithdrawalEligibility: WithdrawalEligibility = {
+  portfolio: {
+    enabled: false,
+    waived: false,
+    source: "none",
+    requirement: 0,
+    deposit_total: 0,
+    remaining: 0,
+    currency: "USD",
+    can_withdraw: true,
+  },
+  pending_fees_count: 0,
+  can_withdraw: true,
+};
+
 export interface GlobalPortfolioRequirementSettings {
   enabled: boolean;
   min_deposit_total: number;
@@ -64,8 +79,7 @@ export async function fetchWithdrawalEligibility(): Promise<WithdrawalEligibilit
   try {
     return await fetchWithdrawalEligibilityFallback();
   } catch (fallbackError) {
-    if (error) throw error;
-    throw fallbackError;
+    throw fallbackError ?? error;
   }
 }
 
@@ -80,22 +94,21 @@ async function fetchWithdrawalEligibilityFallback(): Promise<WithdrawalEligibili
       .from("profiles")
       .select("portfolio_requirement_override, portfolio_requirement_waived")
       .eq("id", userId)
-      .single(),
+      .maybeSingle(),
     supabase.from("deposits").select("amount, status").eq("user_id", userId),
     supabase.from("user_fees").select("id").eq("user_id", userId).eq("status", "pending"),
   ]);
 
   if (settingsRes.error) throw settingsRes.error;
-  if (profileRes.error) throw profileRes.error;
+  if (profileRes.error && profileRes.error.code !== "PGRST116") throw profileRes.error;
   if (depositsRes.error) throw depositsRes.error;
-  if (feesRes.error) throw feesRes.error;
 
   const global = parseGlobalSettings(settingsRes.data?.value);
   const profile = profileRes.data;
   const depositTotal = (depositsRes.data ?? [])
     .filter((d) => d.status === "completed" || d.status === "approved")
     .reduce((sum, d) => sum + Number(d.amount), 0);
-  const pendingFeesCount = feesRes.data?.length ?? 0;
+  const pendingFeesCount = feesRes.error ? 0 : (feesRes.data?.length ?? 0);
 
   const portfolio = computePortfolioStatus({
     global,
@@ -109,6 +122,32 @@ async function fetchWithdrawalEligibilityFallback(): Promise<WithdrawalEligibili
     pending_fees_count: pendingFeesCount,
     can_withdraw: portfolio.can_withdraw && pendingFeesCount === 0,
   };
+}
+
+/** Client-side portfolio status when the eligibility RPC is unavailable. */
+export async function fetchPortfolioStatusForUser(
+  userId: string,
+  depositTotal: number
+): Promise<PortfolioRequirementStatus> {
+  const [settingsRes, profileRes] = await Promise.all([
+    supabase.from("platform_settings").select("value").eq("key", PORTFOLIO_SETTINGS_KEY).maybeSingle(),
+    supabase
+      .from("profiles")
+      .select("portfolio_requirement_override, portfolio_requirement_waived")
+      .eq("id", userId)
+      .maybeSingle(),
+  ]);
+
+  if (settingsRes.error) throw settingsRes.error;
+  if (profileRes.error && profileRes.error.code !== "PGRST116") throw profileRes.error;
+
+  const global = parseGlobalSettings(settingsRes.data?.value);
+  return computePortfolioStatus({
+    global,
+    override: profileRes.data?.portfolio_requirement_override ?? null,
+    waived: Boolean(profileRes.data?.portfolio_requirement_waived),
+    depositTotal,
+  });
 }
 
 export function computePortfolioStatus(params: {
@@ -185,6 +224,26 @@ export function isPortfolioRequirementBlocking(status: PortfolioRequirementStatu
 }
 
 export function portfolioProgressPercent(status: PortfolioRequirementStatus): number {
-  if (!status.enabled || status.requirement <= 0) return 100;
+  if (!status.enabled || status.waived || status.requirement <= 0) {
+    return status.can_withdraw ? 100 : 0;
+  }
   return Math.min(100, Math.round((status.deposit_total / status.requirement) * 100));
+}
+
+/** Keep requirement progress in sync with settled deposits loaded on the portfolio page. */
+export function syncPortfolioStatusWithDeposits(
+  status: PortfolioRequirementStatus | null | undefined,
+  settledDepositTotal: number
+): PortfolioRequirementStatus | null {
+  if (!status?.enabled || status.waived) return status ?? null;
+  if (status.requirement <= 0) return status;
+
+  const depositTotal = Math.max(settledDepositTotal, 0);
+  const remaining = Math.max(status.requirement - depositTotal, 0);
+  return {
+    ...status,
+    deposit_total: depositTotal,
+    remaining,
+    can_withdraw: depositTotal >= status.requirement,
+  };
 }
