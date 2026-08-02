@@ -61,7 +61,12 @@ export async function fetchWithdrawalEligibility(): Promise<WithdrawalEligibilit
     };
   }
 
-  return fetchWithdrawalEligibilityFallback();
+  try {
+    return await fetchWithdrawalEligibilityFallback();
+  } catch (fallbackError) {
+    if (error) throw error;
+    throw fallbackError;
+  }
 }
 
 async function fetchWithdrawalEligibilityFallback(): Promise<WithdrawalEligibility> {

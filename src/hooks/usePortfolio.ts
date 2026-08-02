@@ -36,21 +36,6 @@ export interface PortfolioSnapshot {
   portfolioStatus: PortfolioRequirementStatus | null;
 }
 
-const defaultEligibility: WithdrawalEligibility = {
-  portfolio: {
-    enabled: false,
-    waived: false,
-    source: "none",
-    requirement: 0,
-    deposit_total: 0,
-    remaining: 0,
-    currency: "USD",
-    can_withdraw: true,
-  },
-  pending_fees_count: 0,
-  can_withdraw: true,
-};
-
 export function usePortfolio(userId: string | undefined) {
   const [data, setData] = useState<PortfolioSnapshot | null>(null);
   const [loading, setLoading] = useState(true);
@@ -71,7 +56,7 @@ export function usePortfolio(userId: string | undefined) {
         fetchUserTransactions(userId),
         supabase.from("trades").select("id, status").eq("user_id", userId),
         supabase.from("ai_trading_subscriptions").select("id, status").eq("user_id", userId),
-        fetchWithdrawalEligibility().catch(() => defaultEligibility),
+        fetchWithdrawalEligibility(),
       ]);
 
       if (balRes.error && balRes.error.code !== "PGRST116") throw balRes.error;

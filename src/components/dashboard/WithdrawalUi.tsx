@@ -80,19 +80,30 @@ export function WithdrawalBalanceBanner({ balance }: { balance: number }) {
 export function PortfolioRequirementPanel({ status }: { status: PortfolioRequirementStatus }) {
   const { t } = useTranslation();
 
-  if (!status.enabled || status.waived || status.can_withdraw) return null;
+  if (!status.enabled || status.waived) return null;
 
   const progress = portfolioProgressPercent(status);
+  const met = status.can_withdraw;
 
   return (
-    <div className="rounded-2xl border border-sky-500/25 bg-sky-500/[0.06] p-5">
+    <div
+      className={cn(
+        "rounded-2xl border p-5",
+        met ? "border-emerald/25 bg-emerald/[0.06]" : "border-sky-500/25 bg-sky-500/[0.06]"
+      )}
+    >
       <div className="flex items-start gap-3">
-        <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-sky-500/15 text-sky-400">
+        <div
+          className={cn(
+            "flex h-9 w-9 shrink-0 items-center justify-center rounded-xl",
+            met ? "bg-emerald/15 text-emerald" : "bg-sky-500/15 text-sky-400"
+          )}
+        >
           <Wallet className="h-4 w-4" />
         </div>
         <div className="min-w-0 flex-1">
           <h2 className="font-display text-sm font-semibold text-foreground">
-            {t("withdrawals.portfolioRequiredTitle")}
+            {met ? t("withdrawals.portfolioMetTitle") : t("withdrawals.portfolioRequiredTitle")}
           </h2>
           <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">
             {t("withdrawals.portfolioRequiredDesc")}
@@ -103,9 +114,11 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
               required: formatCurrency(status.requirement),
             })}
           </p>
-          <p className="mt-1 text-sm text-sky-400">
-            {t("withdrawals.portfolioRemaining", { amount: formatCurrency(status.remaining) })}
-          </p>
+          {!met && (
+            <p className="mt-1 text-sm text-sky-400">
+              {t("withdrawals.portfolioRemaining", { amount: formatCurrency(status.remaining) })}
+            </p>
+          )}
         </div>
       </div>
 
@@ -116,7 +129,7 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
         </div>
         <div className="h-2 overflow-hidden rounded-full bg-secondary">
           <div
-            className="h-full rounded-full bg-sky-500 transition-all"
+            className={cn("h-full rounded-full transition-all", met ? "bg-emerald" : "bg-sky-500")}
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -124,9 +137,11 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
 
       <div className="mt-4 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-xs text-muted">{t("withdrawals.portfolioProfitNote")}</p>
-        <Button asChild size="sm">
-          <Link to="/dashboard/deposits">{t("withdrawals.portfolioDepositCta")}</Link>
-        </Button>
+        {!met && (
+          <Button asChild size="sm">
+            <Link to="/dashboard/deposits">{t("withdrawals.portfolioDepositCta")}</Link>
+          </Button>
+        )}
       </div>
     </div>
   );

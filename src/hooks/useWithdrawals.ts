@@ -43,11 +43,7 @@ export function useWithdrawalData(filter?: WithdrawalFilter) {
       supabase.from("withdrawals").select("*").eq("user_id", userId).order("created_at", { ascending: false }).limit(10),
       supabase.from("balances").select("amount").eq("user_id", userId).single(),
       fetchOutstandingFees(userId).catch(() => [] as UserFee[]),
-      fetchWithdrawalEligibility().catch(() => ({
-        portfolio: defaultPortfolioStatus,
-        pending_fees_count: 0,
-        can_withdraw: true,
-      })),
+      fetchWithdrawalEligibility(),
     ]);
     const all = wRes.data ?? [];
     setWithdrawals(filter ? all.filter((w) => matchesFilter(w.method, filter)) : all);
