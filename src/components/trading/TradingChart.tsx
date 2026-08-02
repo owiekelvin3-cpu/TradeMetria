@@ -76,11 +76,11 @@ export function TradingChart({ candles, symbol, lastPrice, loading }: TradingCha
     });
 
     const candleSeries = chart.addSeries(CandlestickSeries, {
-      upColor: "#10b981",
+      upColor: "#fbbe5b",
       downColor: "#ef4444",
-      borderUpColor: "#10b981",
+      borderUpColor: "#fbbe5b",
       borderDownColor: "#ef4444",
-      wickUpColor: "#10b981",
+      wickUpColor: "#fbbe5b",
       wickDownColor: "#ef4444",
     });
 
@@ -188,7 +188,7 @@ export function TradingChart({ candles, symbol, lastPrice, loading }: TradingCha
 
     priceLineRef.current = series.createPriceLine({
       price: lastPrice,
-      color: "#10b981",
+      color: "#fbbe5b",
       lineWidth: 1,
       lineStyle: 2,
       axisLabelVisible: true,

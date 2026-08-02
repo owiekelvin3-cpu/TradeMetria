@@ -230,8 +230,8 @@ export default function PortfolioPage() {
                   <AreaChart data={data?.chartData ?? []}>
                     <defs>
                       <linearGradient id="portfolio-chart-fill" x1="0" y1="0" x2="0" y2="1">
-                        <stop offset="0%" stopColor="#10b981" stopOpacity={0.45} />
-                        <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                        <stop offset="0%" stopColor="#fbbe5b" stopOpacity={0.45} />
+                        <stop offset="100%" stopColor="#fbbe5b" stopOpacity={0} />
                       </linearGradient>
                     </defs>
                     <XAxis dataKey="label" hide />
@@ -248,7 +248,7 @@ export default function PortfolioPage() {
                     <Area
                       type="monotone"
                       dataKey="value"
-                      stroke="#34d399"
+                      stroke="#ffc764"
                       strokeWidth={2}
                       fill="url(#portfolio-chart-fill)"
                       isAnimationActive

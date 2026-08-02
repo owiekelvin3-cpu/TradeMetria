@@ -53,7 +53,7 @@ function LiveBadge() {
 function MiniSpark({ quote, wide = false, delay = 0 }: { quote: MarketQuote; wide?: boolean; delay?: number }) {
   const id = `tv-spark-${quote.symbol.replace(/[^a-zA-Z0-9]/g, "")}-${wide ? "w" : "n"}`;
   const data = quote.sparkline.map((v) => ({ v }));
-  const color = quote.up ? "#10b981" : "#f87171";
+  const color = quote.up ? "#22c55e" : "#f87171";
 
   return (
     <div className={cn("h-9 sm:h-10", wide ? "w-full min-w-[88px]" : "w-[72px] sm:w-20")}>

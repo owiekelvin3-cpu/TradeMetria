@@ -78,11 +78,11 @@ function SuperchartMock() {
               <AreaChart data={HERO_CHART}>
                 <defs>
                   <linearGradient id="roomChart" x1="0" y1="0" x2="0" y2="1">
-                    <stop offset="0%" stopColor="#10b981" stopOpacity={0.35} />
-                    <stop offset="100%" stopColor="#10b981" stopOpacity={0} />
+                    <stop offset="0%" stopColor="#fbbe5b" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="#fbbe5b" stopOpacity={0} />
                   </linearGradient>
                 </defs>
-                <Area type="monotone" dataKey="v" stroke="#10b981" strokeWidth={2} fill="url(#roomChart)" />
+                <Area type="monotone" dataKey="v" stroke="#fbbe5b" strokeWidth={2} fill="url(#roomChart)" />
               </AreaChart>
             </ResponsiveContainer>
           </div>

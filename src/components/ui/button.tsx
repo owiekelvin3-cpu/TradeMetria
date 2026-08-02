@@ -9,20 +9,20 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default:
-          "rounded-xl bg-emerald text-white shadow-none hover:bg-emerald-glow",
+          "rounded-full bg-white text-void shadow-none hover:bg-[#f4f3f3]",
         secondary:
-          "rounded-xl border border-border bg-secondary/60 text-foreground hover:bg-secondary",
+          "rounded-full border border-border bg-secondary/60 text-foreground hover:bg-secondary",
         outline:
-          "rounded-xl border border-border bg-transparent text-foreground hover:bg-secondary/50",
+          "rounded-full border border-border bg-transparent text-foreground hover:bg-secondary/50",
         ghost:
           "rounded-xl text-muted hover:text-foreground hover:bg-secondary/60",
         destructive:
-          "rounded-xl border border-red-500/25 bg-red-500/10 text-red-500 hover:bg-red-500/15",
+          "rounded-full border border-red-500/25 bg-red-500/10 text-red-500 hover:bg-red-500/15",
         link: "rounded-none text-emerald underline-offset-4 hover:underline",
         gold:
-          "rounded-xl bg-gold text-[#0f172a] hover:bg-gold-soft",
+          "rounded-full bg-emerald text-void hover:bg-emerald-glow",
         pill:
-          "rounded-full bg-gradient-emerald text-white shadow-[0_4px_24px_rgba(16,185,129,0.35)] hover:shadow-[0_8px_40px_rgba(16,185,129,0.45)]",
+          "rounded-full bg-white text-void shadow-none hover:bg-[#f4f3f3]",
       },
       size: {
         default: "h-11 px-6 text-sm",

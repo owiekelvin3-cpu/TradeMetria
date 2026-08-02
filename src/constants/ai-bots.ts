@@ -28,7 +28,7 @@ export const AI_BOTS: AIBot[] = [
     risk: "low",
     markets: ["BTC", "ETH", "SOL"],
     minPower: 250,
-    accent: "#10b981",
+    accent: "#fbbe5b",
   },
   {
     id: "quantum",

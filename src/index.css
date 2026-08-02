@@ -2,36 +2,38 @@
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-display: "Plus Jakarta Sans", "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Inter", ui-sans-serif, system-ui, sans-serif;
 
-  --color-void: #09090b;
-  --color-charcoal: #111111;
-  --color-surface: #161616;
-  --color-surface-elevated: #1e1e1e;
-  --color-navy: #0f172a;
-  --color-slate: #1e293b;
-  --color-emerald: #10b981;
-  --color-emerald-soft: #34d399;
-  --color-emerald-glow: #059669;
-  --color-gold: #c9a227;
-  --color-gold-soft: #e4c65a;
-  --color-muted: #9ca3af;
-  --color-foreground: #fafafa;
+  /* Capital.com-inspired palette: Midnight, White, Signature Gold */
+  --color-void: #050202;
+  --color-charcoal: #141212;
+  --color-surface: #1c1c1c;
+  --color-surface-elevated: #242222;
+  --color-navy: #141212;
+  --color-slate: #494545;
+  --color-emerald: #fbbe5b;
+  --color-emerald-soft: #ffc764;
+  --color-emerald-glow: #ecaf4b;
+  --color-gold: #d18812;
+  --color-gold-soft: #fbbe5b;
+  --color-capital-blue: #41a6ff;
+  --color-muted: #908a8a;
+  --color-foreground: #f4f3f3;
 
-  --color-background: #09090b;
+  --color-background: #050202;
   --color-card: rgba(255, 255, 255, 0.03);
-  --color-card-foreground: #fafafa;
-  --color-primary: #10b981;
-  --color-primary-foreground: #09090b;
+  --color-card-foreground: #f4f3f3;
+  --color-primary: #ffffff;
+  --color-primary-foreground: #050202;
   --color-secondary: rgba(255, 255, 255, 0.06);
-  --color-secondary-foreground: #fafafa;
-  --color-muted-foreground: #9ca3af;
-  --color-accent: #10b981;
-  --color-accent-foreground: #09090b;
+  --color-secondary-foreground: #f4f3f3;
+  --color-muted-foreground: #908a8a;
+  --color-accent: #fbbe5b;
+  --color-accent-foreground: #050202;
   --color-destructive: #ef4444;
-  --color-border: rgba(255, 255, 255, 0.08);
+  --color-border: rgba(255, 255, 255, 0.09);
   --color-input: rgba(255, 255, 255, 0.06);
-  --color-ring: #10b981;
+  --color-ring: #fbbe5b;
 
   --radius-sm: 0.5rem;
   --radius-md: 0.75rem;
@@ -47,23 +49,24 @@
 
 :root.light {
   color-scheme: light;
-  --color-void: #f8fafc;
+  --color-void: #f4f3f3;
   --color-charcoal: #ffffff;
   --color-surface: #ffffff;
-  --color-surface-elevated: #f1f5f9;
-  --color-navy: #e2e8f0;
-  --color-slate: #cbd5e1;
-  --color-muted: #64748b;
-  --color-foreground: #0f172a;
-  --color-background: #f1f5f9;
+  --color-surface-elevated: #e9e8e8;
+  --color-navy: #e8e3e3;
+  --color-slate: #d1cece;
+  --color-muted: #706c6c;
+  --color-foreground: #050202;
+  --color-background: #f4f3f3;
   --color-card: #ffffff;
-  --color-card-foreground: #0f172a;
+  --color-card-foreground: #050202;
+  --color-primary: #050202;
   --color-primary-foreground: #ffffff;
-  --color-secondary: rgba(15, 23, 42, 0.06);
-  --color-secondary-foreground: #0f172a;
-  --color-muted-foreground: #64748b;
-  --color-accent-foreground: #ffffff;
-  --color-border: rgba(15, 23, 42, 0.12);
+  --color-secondary: rgba(5, 2, 2, 0.05);
+  --color-secondary-foreground: #050202;
+  --color-muted-foreground: #706c6c;
+  --color-accent-foreground: #050202;
+  --color-border: rgba(5, 2, 2, 0.1);
   --color-input: #ffffff;
 }
 
@@ -83,8 +86,7 @@
 
   body {
     @apply bg-void text-foreground font-sans antialiased;
-    background: linear-gradient(180deg, #09090b 0%, #0c0c0e 50%, #09090b 100%);
-    /* fixed backgrounds paint incorrectly / jank on iOS Safari */
+    background: var(--color-void);
     background-attachment: scroll;
     min-height: 100dvh;
     overflow-x: clip;
@@ -92,7 +94,7 @@
   }
 
   :root.light body {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+    background: var(--color-void);
     background-attachment: scroll;
   }
 
@@ -102,16 +104,16 @@
   }
 
   ::selection {
-    background: rgba(16, 185, 129, 0.35);
+    background: rgba(251, 190, 91, 0.35);
     color: #fff;
   }
 
   :root.light ::selection {
-    color: #0f172a;
+    color: #050202;
   }
 
   :focus-visible {
-    outline: 2px solid rgba(16, 185, 129, 0.5);
+    outline: 2px solid rgba(251, 190, 91, 0.55);
     outline-offset: 2px;
   }
 
@@ -160,7 +162,7 @@
   }
 
   .text-market-up {
-    color: #10b981;
+    color: #22c55e;
   }
 
   .text-market-down {
@@ -186,80 +188,80 @@
 
   /* ── Gradients (never flat) ── */
   .bg-gradient-void {
-    background: linear-gradient(180deg, #09090b 0%, #111111 50%, #09090b 100%);
+    background: linear-gradient(180deg, #050202 0%, #141212 50%, #050202 100%);
   }
 
   :root.light .bg-gradient-void {
-    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 50%, #f8fafc 100%);
+    background: linear-gradient(180deg, #f4f3f3 0%, #e9e8e8 50%, #f4f3f3 100%);
   }
 
   .bg-gradient-surface {
-    background: linear-gradient(145deg, rgba(22, 22, 22, 0.9) 0%, rgba(15, 23, 42, 0.4) 50%, rgba(22, 22, 22, 0.9) 100%);
+    background: linear-gradient(145deg, rgba(28, 28, 28, 0.95) 0%, rgba(20, 18, 18, 0.6) 50%, rgba(28, 28, 28, 0.95) 100%);
   }
 
   :root.light .bg-gradient-surface {
-    background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 50%, #ffffff 100%);
+    background: linear-gradient(145deg, #ffffff 0%, #f4f3f3 50%, #ffffff 100%);
   }
 
   .bg-gradient-emerald {
-    background: linear-gradient(135deg, #34d399 0%, #10b981 45%, #059669 100%);
+    background: linear-gradient(135deg, #ffc764 0%, #fbbe5b 45%, #ecaf4b 100%);
   }
 
   .bg-gradient-emerald-subtle {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(251, 190, 91, 0.15) 0%, rgba(5, 150, 105, 0.05) 100%);
   }
 
   :root.light .bg-gradient-emerald-subtle {
-    background: linear-gradient(135deg, rgba(16, 185, 129, 0.12) 0%, rgba(5, 150, 105, 0.04) 100%);
+    background: linear-gradient(135deg, rgba(251, 190, 91, 0.12) 0%, rgba(5, 150, 105, 0.04) 100%);
   }
 
   .bg-gradient-gold-subtle {
-    background: linear-gradient(135deg, rgba(201, 162, 39, 0.12) 0%, rgba(201, 162, 39, 0.02) 100%);
+    background: linear-gradient(135deg, rgba(209, 136, 18, 0.12) 0%, rgba(209, 136, 18, 0.02) 100%);
   }
 
   .bg-gradient-card {
     background: linear-gradient(
       160deg,
-      rgba(255, 255, 255, 0.06) 0%,
+      rgba(255, 255, 255, 0.05) 0%,
       rgba(255, 255, 255, 0.02) 40%,
-      rgba(15, 23, 42, 0.15) 100%
+      rgba(20, 18, 18, 0.35) 100%
     );
   }
 
   :root.light .bg-gradient-card {
-    background: linear-gradient(160deg, #ffffff 0%, #f8fafc 45%, #f1f5f9 100%);
+    background: linear-gradient(160deg, #ffffff 0%, #f4f3f3 45%, #e9e8e8 100%);
   }
 
   .bg-gradient-hero {
     background:
-      radial-gradient(ellipse 90% 60% at 50% -30%, rgba(16, 185, 129, 0.14), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(201, 162, 39, 0.06), transparent 50%),
-      radial-gradient(ellipse 40% 30% at 0% 100%, rgba(16, 185, 129, 0.05), transparent 50%);
+      radial-gradient(ellipse 90% 60% at 50% -30%, rgba(251, 190, 91, 0.14), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(209, 136, 18, 0.06), transparent 50%),
+      radial-gradient(ellipse 40% 30% at 0% 100%, rgba(251, 190, 91, 0.05), transparent 50%);
   }
 
   :root.light .bg-gradient-hero {
     background:
-      radial-gradient(ellipse 90% 60% at 50% -30%, rgba(16, 185, 129, 0.1), transparent 60%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(201, 162, 39, 0.05), transparent 50%),
-      radial-gradient(ellipse 40% 30% at 0% 100%, rgba(16, 185, 129, 0.04), transparent 50%);
+      radial-gradient(ellipse 90% 60% at 50% -30%, rgba(251, 190, 91, 0.1), transparent 60%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(209, 136, 18, 0.05), transparent 50%),
+      radial-gradient(ellipse 40% 30% at 0% 100%, rgba(251, 190, 91, 0.04), transparent 50%);
   }
 
   .border-gradient {
     border: 1px solid transparent;
     background:
       linear-gradient(var(--color-charcoal), var(--color-charcoal)) padding-box,
-      linear-gradient(135deg, rgba(16, 185, 129, 0.35), rgba(255, 255, 255, 0.08), rgba(201, 162, 39, 0.2)) border-box;
+      linear-gradient(135deg, rgba(251, 190, 91, 0.35), rgba(255, 255, 255, 0.08), rgba(209, 136, 18, 0.2)) border-box;
   }
 
   .text-gradient {
-    background: linear-gradient(135deg, #ffffff 0%, #d4d4d8 60%, #a1a1aa 100%);
+    background: linear-gradient(135deg, #ffffff 0%, #e9e8e8 60%, #908a8a 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
   }
 
   :root.light .text-gradient {
-    background: linear-gradient(135deg, #0f172a 0%, #334155 55%, #64748b 100%);
+    background: linear-gradient(135deg, #050202 0%, #494545 55%, #706c6c 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -274,7 +276,7 @@
   }
 
   .text-gradient-emerald {
-    background: linear-gradient(135deg, #6ee7b7 0%, #34d399 30%, #10b981 60%, #059669 100%);
+    background: linear-gradient(135deg, #ffde7c 0%, #ffc764 30%, #fbbe5b 60%, #ecaf4b 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
@@ -298,8 +300,8 @@
 
   :root.light .glass {
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.82) 100%);
-    border-color: rgba(15, 23, 42, 0.08);
-    box-shadow: 0 4px 24px rgba(15, 23, 42, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
+    border-color: rgba(5, 2, 2, 0.08);
+    box-shadow: 0 4px 24px rgba(5, 2, 2, 0.06), inset 0 1px 0 rgba(255, 255, 255, 1);
   }
 
   .glass-strong {
@@ -312,30 +314,30 @@
 
   :root.light .glass-strong {
     background: linear-gradient(145deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.92) 100%);
-    border-color: rgba(15, 23, 42, 0.1);
-    box-shadow: 0 8px 40px rgba(15, 23, 42, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
+    border-color: rgba(5, 2, 2, 0.1);
+    box-shadow: 0 8px 40px rgba(5, 2, 2, 0.08), inset 0 1px 0 rgba(255, 255, 255, 1);
   }
 
   .glow-emerald {
     box-shadow:
-      0 0 40px rgba(16, 185, 129, 0.12),
-      0 0 80px rgba(16, 185, 129, 0.06),
+      0 0 40px rgba(251, 190, 91, 0.12),
+      0 0 80px rgba(251, 190, 91, 0.06),
       0 20px 60px rgba(0, 0, 0, 0.4);
   }
 
   :root.light .glow-emerald {
     box-shadow:
-      0 0 40px rgba(16, 185, 129, 0.1),
-      0 0 80px rgba(16, 185, 129, 0.05),
-      0 16px 40px rgba(15, 23, 42, 0.08);
+      0 0 40px rgba(251, 190, 91, 0.1),
+      0 0 80px rgba(251, 190, 91, 0.05),
+      0 16px 40px rgba(5, 2, 2, 0.08);
   }
 
   .glow-emerald-sm {
-    box-shadow: 0 0 24px rgba(16, 185, 129, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 0 24px rgba(251, 190, 91, 0.15), 0 8px 32px rgba(0, 0, 0, 0.3);
   }
 
   :root.light .glow-emerald-sm {
-    box-shadow: 0 0 20px rgba(16, 185, 129, 0.12), 0 8px 24px rgba(15, 23, 42, 0.08);
+    box-shadow: 0 0 20px rgba(251, 190, 91, 0.12), 0 8px 24px rgba(5, 2, 2, 0.08);
   }
 
   .card-elevated {
@@ -349,26 +351,26 @@
 
   :root.light .card-elevated {
     background: #ffffff;
-    border-color: rgba(15, 23, 42, 0.1);
+    border-color: rgba(5, 2, 2, 0.1);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 1) inset,
-      0 16px 40px -12px rgba(15, 23, 42, 0.12);
+      0 16px 40px -12px rgba(5, 2, 2, 0.12);
   }
 
   .card-elevated:hover {
     transform: translateY(-4px);
-    border-color: rgba(16, 185, 129, 0.2);
+    border-color: rgba(251, 190, 91, 0.2);
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 0.06) inset,
-      0 0 40px rgba(16, 185, 129, 0.08),
+      0 0 40px rgba(251, 190, 91, 0.08),
       0 28px 60px -12px rgba(0, 0, 0, 0.55);
   }
 
   :root.light .card-elevated:hover {
     box-shadow:
       0 1px 0 rgba(255, 255, 255, 1) inset,
-      0 0 28px rgba(16, 185, 129, 0.08),
-      0 20px 48px -12px rgba(15, 23, 42, 0.14);
+      0 0 28px rgba(251, 190, 91, 0.08),
+      0 20px 48px -12px rgba(5, 2, 2, 0.14);
   }
 
   .noise {
@@ -388,8 +390,8 @@
 
   :root.light .grid-pattern {
     background-image:
-      linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+      linear-gradient(rgba(5, 2, 2, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(5, 2, 2, 0.05) 1px, transparent 1px);
   }
 
   /* Soft panel used across dashboard — works in both themes */
@@ -421,22 +423,22 @@
 
   :root.light .dashboard-atmosphere {
     background:
-      radial-gradient(ellipse 70% 45% at 0% -10%, rgba(16, 185, 129, 0.08), transparent 55%),
-      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(201, 162, 39, 0.06), transparent 50%),
-      radial-gradient(ellipse 60% 50% at 50% 120%, rgba(16, 185, 129, 0.04), transparent 55%);
+      radial-gradient(ellipse 70% 45% at 0% -10%, rgba(251, 190, 91, 0.08), transparent 55%),
+      radial-gradient(ellipse 50% 40% at 100% 0%, rgba(209, 136, 18, 0.06), transparent 50%),
+      radial-gradient(ellipse 60% 50% at 50% 120%, rgba(251, 190, 91, 0.04), transparent 55%);
   }
 
   /* Finance hero — void base with soft brand washes */
   .dashboard-hero {
-    @apply relative overflow-hidden rounded-[1.75rem] border-0 bg-[#0c0c0e] text-white shadow-[0_18px_48px_rgba(0,0,0,0.28)];
+    @apply relative overflow-hidden rounded-[1.75rem] border border-white/8 bg-[#141212] text-white shadow-[0_18px_48px_rgba(0,0,0,0.35)];
     background-image:
-      radial-gradient(ellipse 70% 55% at 0% -10%, color-mix(in oklab, var(--color-emerald) 18%, transparent), transparent 58%),
-      radial-gradient(ellipse 45% 40% at 100% 0%, color-mix(in oklab, var(--color-gold) 9%, transparent), transparent 52%),
-      linear-gradient(165deg, #111113 0%, #09090b 58%, #0a0d0c 100%);
+      radial-gradient(ellipse 70% 55% at 0% -10%, color-mix(in oklab, var(--color-emerald) 14%, transparent), transparent 58%),
+      radial-gradient(ellipse 45% 40% at 100% 0%, color-mix(in oklab, var(--color-gold) 8%, transparent), transparent 52%),
+      linear-gradient(165deg, #242222 0%, #050202 58%, #141212 100%);
   }
 
   :root.light .dashboard-hero {
-    box-shadow: 0 20px 44px rgba(15, 23, 42, 0.14);
+    box-shadow: 0 20px 44px rgba(5, 2, 2, 0.14);
   }
 
   .dashboard-hero-muted {
@@ -486,7 +488,7 @@
   }
 
   .dashboard-pill-emerald {
-    @apply inline-flex h-11 items-center justify-center gap-2 rounded-full bg-emerald px-5 text-sm font-semibold text-white transition-colors hover:bg-emerald-glow;
+    @apply inline-flex h-11 items-center justify-center gap-2 rounded-full bg-white px-5 text-sm font-semibold text-void transition-colors hover:bg-[#f4f3f3];
   }
 
   .dashboard-row {
@@ -518,11 +520,11 @@
 
   .dashboard-dock-inner {
     pointer-events: auto;
-    @apply flex w-full max-w-sm items-center justify-between gap-1 rounded-full border border-border/60 bg-[#0c0c0e]/95 px-2 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl;
+    @apply flex w-full max-w-sm items-center justify-between gap-1 rounded-full border border-border/60 bg-[#141212]/95 px-2 py-1.5 shadow-[0_12px_40px_rgba(0,0,0,0.45)] backdrop-blur-xl;
   }
 
   :root.light .dashboard-dock-inner {
-    @apply border-black/10 bg-[#111113]/95;
+    @apply border-black/10 bg-white/95;
   }
 
   .dashboard-dock-item {
@@ -559,9 +561,9 @@
 
   :root.light .admin-atmosphere {
     background:
-      radial-gradient(ellipse 65% 40% at 0% -5%, rgba(201, 162, 39, 0.1), transparent 55%),
-      radial-gradient(ellipse 50% 35% at 100% 0%, rgba(16, 185, 129, 0.06), transparent 50%),
-      radial-gradient(ellipse 55% 45% at 50% 120%, rgba(201, 162, 39, 0.05), transparent 55%);
+      radial-gradient(ellipse 65% 40% at 0% -5%, rgba(209, 136, 18, 0.1), transparent 55%),
+      radial-gradient(ellipse 50% 35% at 100% 0%, rgba(251, 190, 91, 0.06), transparent 50%),
+      radial-gradient(ellipse 55% 45% at 50% 120%, rgba(209, 136, 18, 0.05), transparent 55%);
   }
 
   .admin-shell {
@@ -587,7 +589,7 @@
   }
 
   :root.light .admin-hero {
-    box-shadow: 0 8px 32px rgba(15, 23, 42, 0.06);
+    box-shadow: 0 8px 32px rgba(5, 2, 2, 0.06);
   }
 
   .admin-stat {
@@ -630,8 +632,8 @@
 
   .select-input:focus {
     outline: none;
-    border-color: rgba(16, 185, 129, 0.4);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    border-color: rgba(251, 190, 91, 0.4);
+    box-shadow: 0 0 0 3px rgba(251, 190, 91, 0.15);
   }
 
   .scrollbar-none {
@@ -654,8 +656,8 @@
 
   .textarea-input:focus {
     outline: none;
-    border-color: rgba(16, 185, 129, 0.4);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.15);
+    border-color: rgba(251, 190, 91, 0.4);
+    box-shadow: 0 0 0 3px rgba(251, 190, 91, 0.15);
   }
 
   .data-table th {
@@ -672,7 +674,7 @@
 
   .divider-gradient {
     height: 1px;
-    background: linear-gradient(90deg, transparent, rgba(16, 185, 129, 0.3), rgba(201, 162, 39, 0.15), transparent);
+    background: linear-gradient(90deg, transparent, rgba(251, 190, 91, 0.3), rgba(209, 136, 18, 0.15), transparent);
   }
 }
 
@@ -735,7 +737,7 @@
 
 :root.light .support-thread-wallpaper {
   background:
-    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(16, 185, 129, 0.06), transparent),
+    radial-gradient(ellipse 80% 50% at 50% -10%, rgba(251, 190, 91, 0.06), transparent),
     #f8fafc;
 }
 

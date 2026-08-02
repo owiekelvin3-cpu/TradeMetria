@@ -65,11 +65,11 @@ function MiniLiveChart({ candles }: { candles: Candle[] }) {
     });
 
     const series = chart.addSeries(CandlestickSeries, {
-      upColor: "#10b981",
+      upColor: "#fbbe5b",
       downColor: "#ef4444",
-      borderUpColor: "#10b981",
+      borderUpColor: "#fbbe5b",
       borderDownColor: "#ef4444",
-      wickUpColor: "#10b981",
+      wickUpColor: "#fbbe5b",
       wickDownColor: "#ef4444",
     });
 

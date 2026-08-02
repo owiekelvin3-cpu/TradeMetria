@@ -15,7 +15,7 @@ import { cn } from "@/lib/utils";
 function MiniSpark({ row }: { row: EconomyMetricRow }) {
   const id = `trend-spark-${row.code}-${row.display}`;
   const data = row.sparkline.map((v) => ({ v }));
-  const color = row.value >= 0 ? "#10b981" : "#f87171";
+  const color = row.value >= 0 ? "#22c55e" : "#f87171";
 
   return (
     <div className="h-9 w-24">

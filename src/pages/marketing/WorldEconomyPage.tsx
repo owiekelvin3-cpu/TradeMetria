@@ -21,7 +21,7 @@ function MiniSpark({ row }: { row: EconomyMetricRow }) {
   const id = `eco-spark-${row.code}`;
   const data = row.sparkline.map((v) => ({ v }));
   const up = row.value >= 0;
-  const color = up ? "#10b981" : "#f87171";
+  const color = up ? "#22c55e" : "#f87171";
 
   return (
     <div className="h-9 w-20">
