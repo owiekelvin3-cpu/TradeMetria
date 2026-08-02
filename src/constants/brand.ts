@@ -12,12 +12,12 @@ export const BRAND = {
   foundedYear: 2021,
   twitter: "@TradeMetria",
   colors: {
-    navy: "#09090B",
-    slate: "#161616",
+    navy: "#000000",
+    slate: "#0A0A0A",
     gold: "#C9A227",
     emerald: "#10B981",
     emeraldSoft: "#34D399",
     emeraldGlow: "#059669",
-    offWhite: "#FAFAFA",
+    offWhite: "#FFFFFF",
   },
 } as const;
