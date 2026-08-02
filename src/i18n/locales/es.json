@@ -172,10 +172,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "Años de operación",
-    "verifiedClients": "Clientes verificados",
-    "globalMarkets": "Mercados globales",
-    "uptimeSla": "SLA de disponibilidad"
+    "linksLabel": "Enlaces de cumplimiento y soporte",
+    "contactDesk": "Contactar mesa de atención"
   },
   "editorial": {
     "eyebrow": "Diseñado para capital serio",

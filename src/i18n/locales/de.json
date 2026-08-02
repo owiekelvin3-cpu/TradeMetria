@@ -172,10 +172,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "Jahre am Markt",
-    "verifiedClients": "Verifizierte Kunden",
-    "globalMarkets": "Globale Märkte",
-    "uptimeSla": "Verfügbarkeits-SLA"
+    "linksLabel": "Compliance- und Support-Links",
+    "contactDesk": "Kundendienst kontaktieren"
   },
   "editorial": {
     "eyebrow": "Für ernsthaftes Kapital gebaut",

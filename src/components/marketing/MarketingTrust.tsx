@@ -13,38 +13,38 @@ const pillars = [
   { icon: Mail, titleKey: "marketingTrust.pillarSupport", descKey: "marketingTrust.pillarSupportDesc" },
 ] as const;
 
-const stats = [
-  { value: `${new Date().getFullYear() - BRAND.foundedYear}+`, labelKey: "marketingTrust.statYears" },
-  { value: "150+", labelKey: "marketingTrust.statMarkets" },
-  { value: "99.9%", labelKey: "marketingTrust.statUptime" },
-  { value: "24/7", labelKey: "marketingTrust.statDesk" },
-] as const;
-
 export function MarketingTrustBand({ className }: { className?: string }) {
   const { t } = useTranslation();
 
   return (
-    <section className={cn("border-y border-border bg-secondary/20 py-10 md:py-12", className)}>
+    <section className={cn("border-y border-border bg-secondary/15 py-4 md:py-5", className)}>
       <Container>
         <FadeIn>
-          <div className="grid grid-cols-2 gap-6 md:grid-cols-4 md:gap-8">
-            {stats.map((s) => (
-              <div key={s.labelKey} className="text-center md:text-left">
-                <p className="font-display text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                  {s.value}
-                </p>
-                <p className="mt-1 text-xs font-medium uppercase tracking-wider text-muted">
-                  {t(s.labelKey)}
-                </p>
-              </div>
-            ))}
+          <div className="flex flex-col items-center justify-between gap-3 text-center text-xs text-muted sm:flex-row sm:text-left md:text-sm">
+            <p>
+              {t("marketingTrust.registrationNote", {
+                id: BRAND.registrationNumber,
+                entity: BRAND.legalEntity,
+              })}
+            </p>
+            <nav
+              className="flex flex-wrap items-center justify-center gap-x-4 gap-y-1"
+              aria-label={t("trustBar.linksLabel")}
+            >
+              <Link to="/security" className="font-medium text-foreground/80 transition-colors hover:text-emerald">
+                {t("nav.security")}
+              </Link>
+              <Link to="/verify" className="font-medium text-foreground/80 transition-colors hover:text-emerald">
+                {t("footer.verifyCertificate")}
+              </Link>
+              <a
+                href={`mailto:${BRAND.supportEmail}`}
+                className="font-medium text-foreground/80 transition-colors hover:text-emerald"
+              >
+                {t("trustBar.contactDesk")}
+              </a>
+            </nav>
           </div>
-          <p className="mt-6 text-center text-xs text-muted md:text-left">
-            {t("marketingTrust.registrationNote", {
-              id: BRAND.registrationNumber,
-              entity: BRAND.legalEntity,
-            })}
-          </p>
         </FadeIn>
       </Container>
     </section>

@@ -172,10 +172,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "سنوات التشغيل",
-    "verifiedClients": "عملاء موثّقون",
-    "globalMarkets": "الأسواق العالمية",
-    "uptimeSla": "اتفاقية مستوى الخدمة للتشغيل"
+    "linksLabel": "روابط الامتثال والدعم",
+    "contactDesk": "تواصل مع خدمة العملاء"
   },
   "editorial": {
     "eyebrow": "مصممة لرؤوس الأموال الجادة",

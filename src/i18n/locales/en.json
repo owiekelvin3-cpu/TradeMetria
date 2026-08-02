@@ -186,10 +186,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "Years Operating",
-    "verifiedClients": "Verified Clients",
-    "globalMarkets": "Global Markets",
-    "uptimeSla": "Uptime SLA"
+    "linksLabel": "Compliance and support links",
+    "contactDesk": "Contact client desk"
   },
   "communityPulse": {
     "eyebrow": "Community",

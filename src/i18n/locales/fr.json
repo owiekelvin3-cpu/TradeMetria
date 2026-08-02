@@ -172,10 +172,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "Années d'activité",
-    "verifiedClients": "Clients vérifiés",
-    "globalMarkets": "Marchés mondiaux",
-    "uptimeSla": "SLA de disponibilité"
+    "linksLabel": "Liens conformité et assistance",
+    "contactDesk": "Contacter le service client"
   },
   "editorial": {
     "eyebrow": "Conçu pour les capitaux sérieux",

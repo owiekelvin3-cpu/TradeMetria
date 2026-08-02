@@ -172,10 +172,8 @@
     }
   },
   "trustBar": {
-    "yearsOperating": "运营年限",
-    "verifiedClients": "认证客户",
-    "globalMarkets": "全球市场",
-    "uptimeSla": "正常运行时间 SLA"
+    "linksLabel": "合规与支持链接",
+    "contactDesk": "联系客户支持"
   },
   "editorial": {
     "eyebrow": "为严肃资本而打造",
