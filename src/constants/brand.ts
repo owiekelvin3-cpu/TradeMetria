@@ -1,0 +1,23 @@
+export const BRAND = {
+  name: "TradeMetria",
+  shortName: "Trade",
+  wordmarkSuffix: "Metria",
+  legalEntity: "TradeMetria LLC",
+  tagline: "Professional Brokerage & Wealth Management",
+  domain: "trademetria.ai",
+  url: "https://trademetria.ai",
+  supportEmail: "support@trademetria.ai",
+  complianceEmail: "compliance@trademetria.ai",
+  registrationNumber: "TM-2021-001",
+  foundedYear: 2021,
+  twitter: "@TradeMetria",
+  colors: {
+    navy: "#09090B",
+    slate: "#161616",
+    gold: "#C9A227",
+    emerald: "#10B981",
+    emeraldSoft: "#34D399",
+    emeraldGlow: "#059669",
+    offWhite: "#FAFAFA",
+  },
+} as const;
