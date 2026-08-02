@@ -5,7 +5,7 @@ export const BRAND = {
   legalEntity: "TradeMetria LLC",
   tagline: "Professional Brokerage & Wealth Management",
   domain: "trademetria.ai",
-  url: "https://trademetria.ai",
+  url: "https://trademetria.vercel.app",
   supportEmail: "support@trademetria.ai",
   complianceEmail: "compliance@trademetria.ai",
   registrationNumber: "TM-2021-001",
