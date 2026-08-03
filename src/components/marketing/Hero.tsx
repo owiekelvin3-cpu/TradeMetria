@@ -1,31 +1,16 @@
-import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { motion } from "framer-motion";
 import { BRAND } from "@/constants/brand";
 import { Button } from "@/components/ui/button";
 import { Container } from "@/components/ui/section";
+import { LazyVideo } from "@/components/ui/lazy-video";
 
 const PLATFORM_VIDEO_SRC = "/videos/platform.mp4";
+const PLATFORM_VIDEO_POSTER = "/images/platform-video-nebula.png";
 
 function PlatformHeroVideo() {
   const { t } = useTranslation();
-  const videoRef = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const el = videoRef.current;
-    if (!el) return;
-    el.muted = true;
-    const play = () => {
-      void el.play().catch(() => {});
-    };
-    play();
-    const onVisible = () => {
-      if (document.visibilityState === "visible") play();
-    };
-    document.addEventListener("visibilitychange", onVisible);
-    return () => document.removeEventListener("visibilitychange", onVisible);
-  }, []);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-charcoal">
@@ -35,15 +20,14 @@ function PlatformHeroVideo() {
           {t("common.live")}
         </span>
       </div>
-      <video
-        ref={videoRef}
+      <LazyVideo
         className="aspect-[16/10] w-full object-cover object-top"
         src={PLATFORM_VIDEO_SRC}
+        poster={PLATFORM_VIDEO_POSTER}
         autoPlay
         muted
         loop
         playsInline
-        preload="metadata"
         aria-label={t("hero.videoAlt")}
       />
     </div>

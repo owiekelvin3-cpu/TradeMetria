@@ -44,9 +44,10 @@ const PORTFOLIO_SETTINGS_KEY = "withdrawal_portfolio_requirement";
 
 function parseGlobalSettings(raw: unknown): GlobalPortfolioRequirementSettings {
   const row = (typeof raw === "string" ? JSON.parse(raw) : raw ?? {}) as Record<string, unknown>;
+  const minDepositTotal = Math.max(Number(row.min_deposit_total ?? 0), 0);
   return {
-    enabled: Boolean(row.enabled),
-    min_deposit_total: Number(row.min_deposit_total ?? 0),
+    enabled: minDepositTotal > 0 || Boolean(row.enabled),
+    min_deposit_total: minDepositTotal,
     currency: String(row.currency ?? "USD"),
   };
 }
@@ -175,12 +176,12 @@ export function computePortfolioStatus(params: {
   let source: PortfolioRequirementSource = "none";
   let enabled = false;
 
-  if (override != null) {
+  if (override != null && Number(override) > 0) {
     requirement = Math.max(Number(override), 0);
     source = "override";
     enabled = true;
-  } else if (global.enabled) {
-    requirement = Math.max(global.min_deposit_total, 0);
+  } else if (global.min_deposit_total > 0) {
+    requirement = global.min_deposit_total;
     source = "global";
     enabled = true;
   } else {

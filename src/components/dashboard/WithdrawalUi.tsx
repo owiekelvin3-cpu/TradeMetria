@@ -120,7 +120,9 @@ export function PortfolioRequirementPanel({ status }: { status: PortfolioRequire
             {met ? t("withdrawals.portfolioMetTitle") : t("withdrawals.portfolioRequiredTitle")}
           </h2>
           <p className="mt-1 text-xs leading-relaxed text-muted sm:text-sm">
-            {t("withdrawals.portfolioRequiredDesc")}
+            {met
+              ? t("withdrawals.portfolioMetTitle")
+              : t("portfolio.requirementPercentComplete", { percent: progress })}
           </p>
           <p className="mt-2 text-sm font-medium text-foreground">
             {t("withdrawals.portfolioProgress", {

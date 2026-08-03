@@ -171,7 +171,7 @@ export function Header() {
         animate={{ y: hidden ? -110 : 0, opacity: 1 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
         className={cn(
-          "fixed left-0 right-0 top-[var(--risk-bar-height,0px)] z-50 border-b transition-colors duration-300 pt-[env(safe-area-inset-top)]",
+          "fixed left-0 right-0 top-0 z-50 border-b transition-colors duration-300 pt-[env(safe-area-inset-top)]",
           scrolled
             ? "border-border bg-void/95 backdrop-blur-xl"
             : "border-border/60 bg-void/90 backdrop-blur-md"

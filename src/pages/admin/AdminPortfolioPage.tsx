@@ -47,8 +47,9 @@ export default function AdminPortfolioPage() {
     setError("");
     setMessage("");
 
-    const amount = enabled ? parseFloat(minDepositTotal) : 0;
-    if (enabled && (!amount || amount <= 0)) {
+    const amount = parseFloat(minDepositTotal);
+    const hasAmount = Number.isFinite(amount) && amount > 0;
+    if (enabled && !hasAmount) {
       setError(t("admin.portfolio.invalidAmount"));
       return;
     }
@@ -56,10 +57,12 @@ export default function AdminPortfolioPage() {
     setSaving(true);
     try {
       const saved = await setGlobalPortfolioRequirement({
-        enabled,
-        minDepositTotal: amount,
+        enabled: hasAmount,
+        minDepositTotal: hasAmount ? amount : 0,
       });
       setSettings(saved);
+      setEnabled(saved.enabled);
+      setMinDepositTotal(saved.min_deposit_total > 0 ? String(saved.min_deposit_total) : "");
       setMessage(t("admin.portfolio.saved"));
     } catch (err) {
       setError(err instanceof Error ? err.message : t("admin.portfolio.saveFailed"));

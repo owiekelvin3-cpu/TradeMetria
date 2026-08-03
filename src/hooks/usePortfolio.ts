@@ -94,24 +94,32 @@ export function usePortfolio(userId: string | undefined, authReady = true) {
 
       let eligibility: WithdrawalEligibility = defaultWithdrawalEligibility;
       try {
-        eligibility = await fetchWithdrawalEligibility();
-      } catch {
+        const portfolio = await fetchPortfolioStatusForUser(userId, totalDeposits);
+        eligibility = {
+          portfolio,
+          pending_fees_count: 0,
+          can_withdraw: portfolio.can_withdraw,
+        };
         try {
-          const portfolio = await fetchPortfolioStatusForUser(userId, totalDeposits);
+          const rpcEligibility = await fetchWithdrawalEligibility();
           eligibility = {
-            portfolio,
-            pending_fees_count: 0,
-            can_withdraw: portfolio.can_withdraw,
+            portfolio: syncPortfolioStatusWithDeposits(rpcEligibility.portfolio, totalDeposits) ?? portfolio,
+            pending_fees_count: rpcEligibility.pending_fees_count,
+            can_withdraw:
+              (syncPortfolioStatusWithDeposits(rpcEligibility.portfolio, totalDeposits)?.can_withdraw ??
+                portfolio.can_withdraw) && rpcEligibility.pending_fees_count === 0,
           };
         } catch {
-          eligibility = {
-            ...defaultWithdrawalEligibility,
-            portfolio: {
-              ...defaultWithdrawalEligibility.portfolio,
-              deposit_total: totalDeposits,
-            },
-          };
+          // RPC fees count optional; portfolio totals already synced from deposits.
         }
+      } catch {
+        eligibility = {
+          ...defaultWithdrawalEligibility,
+          portfolio: {
+            ...defaultWithdrawalEligibility.portfolio,
+            deposit_total: totalDeposits,
+          },
+        };
       }
 
       const netContributions = totalDeposits - totalWithdrawals;

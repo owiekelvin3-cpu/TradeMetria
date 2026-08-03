@@ -270,24 +270,24 @@ export async function setGlobalPortfolioRequirement(params: {
   minDepositTotal: number;
   currency?: string;
 }): Promise<GlobalPortfolioRequirementSettings> {
-  const value = {
-    enabled: params.enabled,
-    min_deposit_total: Math.max(params.minDepositTotal, 0),
-    currency: params.currency ?? "USD",
-  };
-  const { error } = await supabase.from("platform_settings").upsert(
-    {
-      key: "withdrawal_portfolio_requirement",
-      value,
-      updated_at: new Date().toISOString(),
-    },
-    { onConflict: "key" }
-  );
+  const minDepositTotal = Math.max(params.minDepositTotal, 0);
+  const enabled = minDepositTotal > 0 || params.enabled;
+  const { data, error } = await supabase.rpc("admin_set_withdrawal_portfolio_requirement", {
+    p_enabled: enabled,
+    p_min_deposit_total: minDepositTotal,
+    p_currency: params.currency ?? "USD",
+  });
   if (error) throw new Error(rpcErrorMessage(error, "Could not save portfolio requirement."));
+  return parseGlobalSettingsFromRpc(data);
+}
+
+function parseGlobalSettingsFromRpc(raw: unknown): GlobalPortfolioRequirementSettings {
+  const row = (raw ?? {}) as Record<string, unknown>;
+  const minDepositTotal = Math.max(Number(row.min_deposit_total ?? 0), 0);
   return {
-    enabled: value.enabled,
-    min_deposit_total: value.min_deposit_total,
-    currency: value.currency,
+    enabled: minDepositTotal > 0 || Boolean(row.enabled),
+    min_deposit_total: minDepositTotal,
+    currency: String(row.currency ?? "USD"),
   };
 }
 

@@ -2,8 +2,8 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { AnimatePresence, motion } from "framer-motion";
-import { Area, AreaChart, ResponsiveContainer } from "recharts";
 import { ArrowRight, TrendingDown, TrendingUp } from "@/lib/icons";
+import { Sparkline } from "@/components/ui/sparkline";
 import { FadeIn, StaggerContainer, StaggerItem } from "@/components/motion/Motion";
 import { Container } from "@/components/ui/section";
 import {
@@ -32,9 +32,9 @@ type MarketTab = "indices" | "stocks" | "crypto" | "futures" | "forex";
 const TAB_IDS: MarketTab[] = ["indices", "stocks", "crypto", "futures", "forex"];
 
 const tabTransition = {
-  initial: { opacity: 0, y: 16, filter: "blur(6px)" },
-  animate: { opacity: 1, y: 0, filter: "blur(0px)" },
-  exit: { opacity: 0, y: -10, filter: "blur(4px)" },
+  initial: { opacity: 0, y: 12 },
+  animate: { opacity: 1, y: 0 },
+  exit: { opacity: 0, y: -8 },
 };
 
 function LiveBadge() {
@@ -50,35 +50,8 @@ function LiveBadge() {
   );
 }
 
-function MiniSpark({ quote, wide = false, delay = 0 }: { quote: MarketQuote; wide?: boolean; delay?: number }) {
-  const id = `tv-spark-${quote.symbol.replace(/[^a-zA-Z0-9]/g, "")}-${wide ? "w" : "n"}`;
-  const data = quote.sparkline.map((v) => ({ v }));
-  const color = quote.up ? "#22c55e" : "#f87171";
-
-  return (
-    <div className={cn("h-9 sm:h-10", wide ? "w-full min-w-[88px]" : "w-[72px] sm:w-20")}>
-      <ResponsiveContainer width="100%" height="100%">
-        <AreaChart data={data}>
-          <defs>
-            <linearGradient id={id} x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stopColor={color} stopOpacity={0.4} />
-              <stop offset="100%" stopColor={color} stopOpacity={0} />
-            </linearGradient>
-          </defs>
-          <Area
-            type="monotone"
-            dataKey="v"
-            stroke={color}
-            strokeWidth={1.75}
-            fill={`url(#${id})`}
-            isAnimationActive
-            animationDuration={900}
-            animationBegin={delay}
-          />
-        </AreaChart>
-      </ResponsiveContainer>
-    </div>
-  );
+function MiniSpark({ quote, wide = false }: { quote: MarketQuote; wide?: boolean; delay?: number }) {
+  return <Sparkline values={quote.sparkline} up={quote.up} wide={wide} />;
 }
 
 function FeaturedCard({ quote, index }: { quote: MarketQuote; index: number }) {

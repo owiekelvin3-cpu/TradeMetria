@@ -1,17 +1,33 @@
-import { useEffect } from "react";
+import { lazy, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import { Hero } from "@/components/marketing/Hero";
-import {
-  CapitalDecisionSection,
-  CapitalPlatformsSection,
-  CapitalPricingSection,
-  PlatformStrip,
-} from "@/components/marketing/CapitalSections";
-import { MarketSummary } from "@/components/marketing/MarketSummary";
-import { ServicesGrid } from "@/components/marketing/ServicesGrid";
-import { MarketingTrustPillars } from "@/components/marketing/MarketingTrust";
-import { FAQSection } from "@/components/marketing/FAQSection";
-import { BackToTop } from "@/components/marketing/BackToTop";
+import { PlatformStrip } from "@/components/marketing/CapitalSections";
+import { LazySection } from "@/components/ui/lazy-section";
+
+const MarketSummary = lazy(() =>
+  import("@/components/marketing/MarketSummary").then((m) => ({ default: m.MarketSummary }))
+);
+const CapitalPlatformsSection = lazy(() =>
+  import("@/components/marketing/CapitalSections").then((m) => ({ default: m.CapitalPlatformsSection }))
+);
+const CapitalPricingSection = lazy(() =>
+  import("@/components/marketing/CapitalSections").then((m) => ({ default: m.CapitalPricingSection }))
+);
+const ServicesGrid = lazy(() =>
+  import("@/components/marketing/ServicesGrid").then((m) => ({ default: m.ServicesGrid }))
+);
+const CapitalDecisionSection = lazy(() =>
+  import("@/components/marketing/CapitalSections").then((m) => ({ default: m.CapitalDecisionSection }))
+);
+const MarketingTrustPillars = lazy(() =>
+  import("@/components/marketing/MarketingTrust").then((m) => ({ default: m.MarketingTrustPillars }))
+);
+const FAQSection = lazy(() =>
+  import("@/components/marketing/FAQSection").then((m) => ({ default: m.FAQSection }))
+);
+const BackToTop = lazy(() =>
+  import("@/components/marketing/BackToTop").then((m) => ({ default: m.BackToTop }))
+);
 
 export default function HomePage() {
   const location = useLocation();
@@ -31,14 +47,30 @@ export default function HomePage() {
     <>
       <Hero />
       <PlatformStrip />
-      <MarketSummary />
-      <CapitalPlatformsSection />
-      <CapitalPricingSection />
-      <ServicesGrid />
-      <CapitalDecisionSection />
-      <MarketingTrustPillars />
-      <FAQSection />
-      <BackToTop />
+      <LazySection minHeight={420}>
+        <MarketSummary />
+      </LazySection>
+      <LazySection minHeight={360}>
+        <CapitalPlatformsSection />
+      </LazySection>
+      <LazySection minHeight={320}>
+        <CapitalPricingSection />
+      </LazySection>
+      <LazySection minHeight={360}>
+        <ServicesGrid />
+      </LazySection>
+      <LazySection minHeight={280}>
+        <CapitalDecisionSection />
+      </LazySection>
+      <LazySection minHeight={280}>
+        <MarketingTrustPillars />
+      </LazySection>
+      <LazySection minHeight={240}>
+        <FAQSection />
+      </LazySection>
+      <LazySection minHeight={0}>
+        <BackToTop />
+      </LazySection>
     </>
   );
 }

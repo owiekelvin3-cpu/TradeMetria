@@ -106,11 +106,10 @@ export function Footer() {
           ))}
         </div>
 
-        <div className="mt-10 flex flex-col items-center justify-between gap-3 border-t border-border pt-8 sm:mt-12 sm:gap-4 md:flex-row">
+        <div className="mt-10 border-t border-border pt-8 sm:mt-12">
           <p className="text-center text-xs text-muted md:text-left">
             &copy; {BRAND.foundedYear}&ndash;{new Date().getFullYear()} {BRAND.legalEntity}. {t("common.allRightsReserved")}
           </p>
-          <p className="text-center text-xs text-muted md:text-right">{t("capital.riskDisclaimerShort")}</p>
         </div>
       </Container>
     </footer>

@@ -53,7 +53,9 @@ export function PortfolioRequirementTracker({
                 {met ? t("portfolio.requirementMetTitle") : t("portfolio.requirementBuildTitle")}
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-relaxed text-muted">
-                {t("portfolio.requirementHeroDesc")}
+                {met
+                  ? t("portfolio.requirementMet")
+                  : t("portfolio.requirementPercentComplete", { percent: progress })}
               </p>
             </div>
           </div>
@@ -139,7 +141,7 @@ export function PortfolioRequirementTracker({
                 {progress}%
               </motion.span>
               <span className="text-[10px] uppercase tracking-wider text-muted">
-                {t("portfolio.requirement")}
+                {met ? t("portfolio.requirementComplete") : t("portfolio.requirementTowardUnlock")}
               </span>
             </div>
           </div>
