@@ -53,7 +53,7 @@ export async function showBrowserNotification(
   const payload = {
     body,
     icon: "/icons/icon-192.png",
-    badge: "/favicon.svg",
+    badge: "/favicon.png",
     tag: options?.tag ?? "trademetria-notification",
     renotify: true,
     silent: options?.silent ?? false,

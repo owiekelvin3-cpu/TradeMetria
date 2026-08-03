@@ -5,7 +5,7 @@ export const BRAND = {
   legalEntity: "CapitalAI",
   tagline: "Professional Brokerage & Wealth Management",
   domain: "capitalai.online",
-  url: "https://capitalai.online",
+  url: "https://www.capitalai.online",
   supportEmail: "support@capitalai.online",
   complianceEmail: "compliance@capitalai.online",
   registrationNumber: "CA-2021-001",

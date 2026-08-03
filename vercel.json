@@ -3,13 +3,21 @@
   "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "installCommand": "npm ci",
+  "redirects": [
+    {
+      "source": "/(.*)",
+      "has": [{ "type": "host", "value": "capitalai.online" }],
+      "destination": "https://www.capitalai.online/$1",
+      "permanent": true
+    }
+  ],
   "rewrites": [
     {
       "source": "/api/market/:path*",
       "destination": "https://data-api.binance.vision/api/v3/:path*"
     },
     {
-      "source": "/((?!api/|assets/|videos/|images/|icons/|sw\\.js|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|favicon\\.svg|logo\\.svg|icons\\.svg|logo-lockup\\.png).*)",
+      "source": "/((?!api/|assets/|videos/|images/|icons/|sw\\.js|manifest\\.webmanifest|robots\\.txt|sitemap\\.xml|favicon\\.svg|favicon\\.png|logo\\.svg|logo-lockup\\.png|logo-lockup-2x\\.png|icons\\.svg).*)",
       "destination": "/index.html"
     }
   ],

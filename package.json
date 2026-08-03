@@ -15,7 +15,8 @@
     "provision-supabase": "node scripts/provision-supabase.mjs",
     "connect-mcp": "node scripts/connect-mcp.mjs",
     "configure-domain": "node scripts/configure-capitalai-domain.mjs",
-    "generate-icons": "node scripts/generate-pwa-icons.mjs"
+    "generate-icons": "node scripts/generate-pwa-icons.mjs",
+    "sync-logo": "npx tsx scripts/sync-coin-mark.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.0",
@@ -67,6 +68,7 @@
     "@types/topojson-specification": "^1.0.5",
     "@vitejs/plugin-react": "^6.0.3",
     "oxlint": "^1.71.0",
+    "playwright": "^1.49.0",
     "tailwindcss": "^4.3.2",
     "typescript": "~6.0.2",
     "vite": "^8.1.1"

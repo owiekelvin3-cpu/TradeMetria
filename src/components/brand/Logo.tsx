@@ -1,9 +1,12 @@
 import { BRAND } from "@/constants/brand";
 import { cn } from "@/lib/utils";
-import { CoinMark } from "@/components/brand/CoinMark";
 
 export const BRAND_LOGO = {
-  favicon: "/favicon.svg",
+  coin: "/icons/coin-logo.png",
+  coin2x: "/icons/coin-logo-512.png",
+  lockup: "/logo-lockup.png",
+  lockup2x: "/logo-lockup-2x.png",
+  favicon: "/favicon.png",
   appIcon192: "/icons/icon-192.png",
   appIcon512: "/icons/icon-512.png",
   appleTouch: "/icons/apple-touch-icon.png",
@@ -24,14 +27,19 @@ const sizes = {
   lg: { icon: "h-9 w-9", word: "text-[19px]", gap: "gap-3" },
 };
 
-/** Transparent SVG coin — no background, scales cleanly in dark and light UI. */
-export function LogoIcon({
-  className,
-}: {
-  className?: string;
-  variant?: "default" | "gold";
-}) {
-  return <CoinMark className={className} />;
+/** PNG coin mark — transparent background, crisp on dark and light UI. */
+export function LogoIcon({ className }: { className?: string; variant?: "default" | "gold" }) {
+  return (
+    <img
+      src={BRAND_LOGO.coin}
+      srcSet={`${BRAND_LOGO.coin} 1x, ${BRAND_LOGO.coin2x} 2x`}
+      alt=""
+      width={256}
+      height={256}
+      decoding="async"
+      className={cn("object-contain", className)}
+    />
+  );
 }
 
 export function Logo({

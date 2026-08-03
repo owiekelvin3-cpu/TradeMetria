@@ -44,32 +44,17 @@ export function subscribeInstallPrompt(listener: (event: BeforeInstallPromptEven
 export async function registerServiceWorkerEarly(): Promise<ServiceWorkerRegistration | null> {
   if (!("serviceWorker" in navigator)) return null;
 
+  // Service worker caching caused stale bundles after deploys — clear and disable until stable.
   try {
-    const registration = await navigator.serviceWorker.register("/sw.js", {
-      scope: "/",
-      updateViaCache: "none",
-    });
-
-    if (registration.waiting) {
-      registration.waiting.postMessage({ type: "SKIP_WAITING" });
-    }
-
-    registration.addEventListener("updatefound", () => {
-      const worker = registration.installing;
-      if (!worker) return;
-      worker.addEventListener("statechange", () => {
-        if (worker.state === "installed" && navigator.serviceWorker.controller) {
-          worker.postMessage({ type: "SKIP_WAITING" });
-        }
-      });
-    });
-
-    await navigator.serviceWorker.ready;
-    return registration;
+    const registrations = await navigator.serviceWorker.getRegistrations();
+    await Promise.all(registrations.map((reg) => reg.unregister()));
+    const keys = await caches.keys();
+    await Promise.all(keys.map((key) => caches.delete(key)));
   } catch (error) {
-    console.warn("[pwa] Service worker registration failed:", error);
-    return null;
+    console.warn("[pwa] Service worker cleanup failed:", error);
   }
+
+  return null;
 }
 
 export function initPwaInstallListeners() {

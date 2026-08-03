@@ -1,4 +1,5 @@
 import { Suspense, useEffect, useRef, useState, type ReactNode } from "react";
+import { SectionErrorBoundary } from "@/components/ui/section-error-boundary";
 
 export function LazySection({
   children,
@@ -41,7 +42,13 @@ export function LazySection({
 
   return (
     <div ref={ref} style={!visible ? { minHeight } : undefined}>
-      {visible ? <Suspense fallback={placeholder}>{children}</Suspense> : placeholder}
+      {visible ? (
+        <SectionErrorBoundary fallback={placeholder}>
+          <Suspense fallback={placeholder}>{children}</Suspense>
+        </SectionErrorBoundary>
+      ) : (
+        placeholder
+      )}
     </div>
   );
 }

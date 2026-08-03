@@ -1,17 +1,14 @@
 import { useId } from "react";
 import { cn } from "@/lib/utils";
-
-/** Clean bold C — legible at favicon and header sizes. */
-export const COIN_C_PATH =
-  "M 21 8.5 C 17.2 7 12.8 7 9 8.5 C 6.8 9.6 5.5 11.8 5.5 14.5 C 5.5 17.2 6.8 19.4 9 20.5 C 12.8 22 17.2 22 21 20.5 L 19 17.8 C 16.5 18.9 13.5 18.9 11 17.8 C 9.8 17.1 9 15.9 9 14.5 C 9 13.1 9.8 11.9 11 11.2 C 13.5 10.1 16.5 10.1 19 11.2 Z";
+import { COIN_C_PATH, coinMarkIds } from "@/components/brand/coin-mark-svg";
 
 type CoinMarkProps = {
   className?: string;
 };
 
-/** Minimal copper coin mark — transparent, no filters, no fake photo effects. */
+/** Metallic copper coin with bold C — transparent SVG, scales in dark/light UI. */
 export function CoinMark({ className }: CoinMarkProps) {
-  const uid = useId().replace(/:/g, "");
+  const id = coinMarkIds(useId().replace(/:/g, ""));
 
   return (
     <svg
@@ -22,24 +19,41 @@ export function CoinMark({ className }: CoinMarkProps) {
       className={cn("logo-mark shrink-0", className)}
     >
       <defs>
-        <linearGradient id={`rim-${uid}`} x1="7" y1="5" x2="25" y2="27" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#E4B070" />
-          <stop offset="100%" stopColor="#7A4E28" />
+        <linearGradient id={id.rim} x1="8" y1="4" x2="24" y2="28" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#F2C88A" />
+          <stop offset="42%" stopColor="#C88742" />
+          <stop offset="100%" stopColor="#5E3A1C" />
         </linearGradient>
-        <radialGradient id={`face-${uid}`} cx="34%" cy="30%" r="68%">
-          <stop offset="0%" stopColor="#2A1810" />
-          <stop offset="100%" stopColor="#0A0604" />
+        <linearGradient id={id.rimHi} x1="10" y1="6" x2="22" y2="14" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFE8C4" stopOpacity={0.55} />
+          <stop offset="100%" stopColor="#FFE8C4" stopOpacity={0} />
+        </linearGradient>
+        <radialGradient id={id.face} cx="50%" cy="22%" r="72%">
+          <stop offset="0%" stopColor="#3A2418" />
+          <stop offset="55%" stopColor="#140C08" />
+          <stop offset="100%" stopColor="#050302" />
         </radialGradient>
-        <linearGradient id={`letter-${uid}`} x1="10" y1="8" x2="21" y2="22" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="#F5C978" />
-          <stop offset="100%" stopColor="#B87A28" />
+        <radialGradient id={id.glow} cx="50%" cy="0%" r="85%">
+          <stop offset="0%" stopColor="#B87333" stopOpacity={0.28} />
+          <stop offset="55%" stopColor="#B87333" stopOpacity={0} />
+        </radialGradient>
+        <linearGradient id={id.letter} x1="8" y1="24" x2="22" y2="8" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFD49A" />
+          <stop offset="38%" stopColor="#E8A04E" />
+          <stop offset="100%" stopColor="#8B5428" />
+        </linearGradient>
+        <linearGradient id={id.letterHi} x1="10" y1="22" x2="18" y2="14" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#FFF0D8" stopOpacity={0.45} />
+          <stop offset="100%" stopColor="#FFF0D8" stopOpacity={0} />
         </linearGradient>
       </defs>
-
-      <circle cx="16" cy="16" r="14" fill={`url(#rim-${uid})`} />
-      <circle cx="16" cy="16" r="11.25" fill={`url(#face-${uid})`} />
-      <circle cx="16" cy="16" r="11.25" stroke="#A06B38" strokeWidth="0.45" opacity="0.5" />
-      <path d={COIN_C_PATH} fill={`url(#letter-${uid})`} />
+      <circle cx="16" cy="16" r="14.25" fill={`url(#${id.rim})`} />
+      <circle cx="16" cy="16" r="14.25" fill={`url(#${id.rimHi})`} />
+      <circle cx="16" cy="16" r="11.35" fill={`url(#${id.face})`} />
+      <circle cx="16" cy="16" r="11.35" fill={`url(#${id.glow})`} />
+      <circle cx="16" cy="16" r="11.35" stroke="#8B5A2E" strokeWidth={0.35} opacity={0.45} />
+      <path d={COIN_C_PATH} fill={`url(#${id.letter})`} />
+      <path d={COIN_C_PATH} fill={`url(#${id.letterHi})`} />
     </svg>
   );
 }
