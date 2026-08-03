@@ -103,7 +103,7 @@ export function CoinMark({ className }: CoinMarkProps) {
           <stop offset="100%" stopColor="#3A2010" stopOpacity="0" />
         </linearGradient>
         <filter id={ids.coinShadow} x="-30%" y="-20%" width="160%" height="160%">
-          <feDropShadow dx="0" dy="0.55" stdDeviation="0.45" floodColor="#000000" floodOpacity="0.45" />
+          <feDropShadow dx="0" dy="0.35" stdDeviation="0.25" floodColor="#000000" floodOpacity="0.28" />
         </filter>
         <filter id={ids.emboss} x="-25%" y="-25%" width="150%" height="150%">
           <feDropShadow dx="0" dy="0.32" stdDeviation="0.18" floodColor="#000000" floodOpacity="0.6" />

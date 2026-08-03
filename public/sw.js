@@ -1,5 +1,5 @@
 /* TradeMetria — PWA + push service worker */
-const CACHE_VERSION = "capitalai-shell-v4";
+const CACHE_VERSION = "capitalai-shell-v5";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 
@@ -9,9 +9,6 @@ const PRECACHE_URLS = [
   "/manifest.webmanifest",
   "/favicon.svg",
   "/logo.svg",
-  "/og-image.png",
-  "/icons/coin-logo-dark.png",
-  "/icons/coin-logo-light.png",
   "/icons/icon-192.png",
   "/icons/icon-512.png",
   "/icons/apple-touch-icon.png",
