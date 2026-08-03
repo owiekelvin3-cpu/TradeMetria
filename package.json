@@ -13,7 +13,8 @@
     "preview": "vite preview",
     "create-admin": "node scripts/create-admin.mjs",
     "provision-supabase": "node scripts/provision-supabase.mjs",
-    "connect-mcp": "node scripts/connect-mcp.mjs"
+    "connect-mcp": "node scripts/connect-mcp.mjs",
+    "configure-domain": "node scripts/configure-capitalai-domain.mjs"
   },
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^7.3.0",
