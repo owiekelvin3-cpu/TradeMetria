@@ -146,11 +146,11 @@
 
 @layer utilities {
   .logo-mark {
-    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.28));
+    filter: drop-shadow(0 1px 1px rgba(0, 0, 0, 0.2));
   }
 
   :root.light .logo-mark {
-    filter: drop-shadow(0 1px 1px rgba(5, 2, 2, 0.1)) saturate(1.06) contrast(1.04);
+    filter: drop-shadow(0 1px 1px rgba(5, 2, 2, 0.08));
   }
 
   .font-display {

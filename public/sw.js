@@ -1,5 +1,5 @@
 /* TradeMetria — PWA + push service worker */
-const CACHE_VERSION = "capitalai-shell-v5";
+const CACHE_VERSION = "capitalai-shell-v6";
 const SHELL_CACHE = `${CACHE_VERSION}-shell`;
 const ASSET_CACHE = `${CACHE_VERSION}-assets`;
 
