@@ -37,10 +37,10 @@ npm run preview
 5. Deploy. SPA routes, Binance market proxy, service worker, and video caching are configured in [`vercel.json`](vercel.json).
 
 6. In Supabase → **Authentication → URL Configuration**, add:
-   - Site URL: your production domain (e.g. `https://capitalai.ai`)
+   - Site URL: your production domain (e.g. `https://capitalai.online`)
    - Redirect URLs: `https://*.vercel.app/**` and your custom domain
 
-7. Optional custom domain: Vercel Project → **Domains** → add `capitalai.ai` / `www`.
+7. Optional custom domain: Vercel Project → **Domains** → add `capitalai.online` / `www`.
 
 ### Important
 

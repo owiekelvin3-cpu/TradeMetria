@@ -117,7 +117,7 @@ async function fetchFeed(feed: Feed): Promise<Article[]> {
   try {
     const res = await fetch(feed.rssUrl, {
       headers: {
-        "User-Agent": "CapitalAIMarketsBot/1.0 (+https://capitalai.ai)",
+        "User-Agent": "CapitalAIMarketsBot/1.0 (+https://capitalai.online)",
         Accept: "application/rss+xml, application/xml, text/xml, */*",
       },
     });

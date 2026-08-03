@@ -5,7 +5,7 @@
 - Node.js 18+
 - A [Supabase](https://supabase.com) account
 - A [Vercel](https://vercel.com) or [Netlify](https://netlify.com) account
-- Domain registered: `trademetria.ai`
+- Domain registered: `capitalai.online`
 
 ## 1. Supabase Setup
 
@@ -86,13 +86,13 @@ Or connect your GitHub repo to Vercel:
 
 ## 5. Custom Domain
 
-1. In Vercel: **Settings > Domains** → Add `trademetria.ai`
+1. In Vercel: **Settings > Domains** → Add `capitalai.online`
 2. Update DNS at your registrar per Vercel instructions
 3. SSL is automatic via Vercel
 
 ## 6. Email Setup (Optional)
 
-Configure custom email for `support@trademetria.ai` at your domain registrar or Google Workspace.
+Configure custom email for `support@capitalai.online` at your domain registrar or Google Workspace.
 
 ## 7. Post-Launch Checklist
 
